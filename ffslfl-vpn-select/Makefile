@@ -12,8 +12,8 @@ define Package/ffslfl-vpn-select
     TITLE:= Freifunk-Schleswig-Flensburg vpn-select
     URL:=http://ffslfl.net
     DEPENDS:=+@BUSYBOX_CONFIG_FEATURE_WGET_TIMEOUT \
-             +fff-tunneldigger \
-             +fff-fastd
+             +ffslfl-tunneldigger \
+             +ffslfl-fastd
 endef
 
 define Package/ffslfl-vpn-select/description
