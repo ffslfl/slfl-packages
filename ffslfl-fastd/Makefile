@@ -15,7 +15,7 @@ define Package/ffslfl-fastd
              +@FASTD_ENABLE_METHOD_NULL \
              +@FASTD_ENABLE_CIPHER_NULL \
              +@FASTD_WITH_STATUS_SOCKET \
-             +gluon-mesh-vpn-fastd \
+             +fastd \
              +fff-random
 endef
 
