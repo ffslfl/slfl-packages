@@ -8,7 +8,7 @@ make_config() {
 rm /tmp/fastd_${project}_peers/*
 count=0
 # get fastd peers
-pubkey=$(echo "secret \"$(uci get fastd.fff.secret)\";" | fastd -c - --show-key --machine-readable)
+pubkey=$(echo "secret \"$(uci get fastd.ffslfl.secret)\";" | fastd -c - --show-key --machine-readable)
 wget -T15 "http://keyserver.ffslfl.net/${project}/geo.php?mac=$mac&name=$hostname&port=$port&key=$pubkey&lat=$lat&long=$long" -O /tmp/fastd_${project}_output
 filecounts=$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_${project}_output)
 for file in $filecounts; do
