@@ -19,8 +19,16 @@ define Package/ffslfl-tunneldigger/description
 		It is based on the version made by Freifunk Franken
 endef
 
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+endef
+
 define Package/ffslfl-tunneldigger/install
         $(CP) ./files/* $(1)/
+endef
+
+define Build/Compile
+			#Nothing to do
 endef
 
 $(eval $(call BuildPackage,ffslfl-tunneldigger))

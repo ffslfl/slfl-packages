@@ -22,8 +22,16 @@ define Package/ffslfl-vpn-select/description
 		It is based on the version from Freifunk Franken
 endef
 
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+endef
+
 define Package/ffslfl-vpn-select/install
        $(CP) ./files/* $(1)/
+endef
+
+define Build/Compile
+			#Nothing to do
 endef
 
 $(eval $(call BuildPackage,ffslfl-vpn-select))

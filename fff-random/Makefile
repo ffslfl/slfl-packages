@@ -19,8 +19,16 @@ define Package/fff-random/description
     This packages provides a random function.
 endef
 
+define Build/Prepare
+	mkdir -p $(PKG_BUILD_DIR)
+endef
+
 define Package/fff-random/install
     $(CP) ./files/* $(1)/
+endef
+
+define Build/Compile
+			#Nothing to do
 endef
 
 $(eval $(call BuildPackage,fff-random))
