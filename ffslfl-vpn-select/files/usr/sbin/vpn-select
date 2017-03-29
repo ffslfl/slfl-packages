@@ -1,7 +1,5 @@
 #!/bin/sh
 
-test -f /tmp/started || exit
-
 make_config() {
 # remove old config
 >/etc/config/tunneldigger
@@ -9,15 +7,16 @@ rm /tmp/fastd_${project}_peers/*
 count=0
 # get fastd peers
 pubkey=$(echo "secret \"$(uci get fastd.mesh_vpn.secret)\";" | fastd -c - --show-key --machine-readable)
-wget -T15 "http://keyserver.ffslfl.net/index.php?mac=$mac&name=$hostname&port=$port&key=$pubkey&lat=$lat&long=$long" -O /tmp/fastd_${project}_output
+wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=$mac&name=$hostname&port=$port&key=$pubkey&lat=$lat&long=$long" -O /tmp/fastd_${project}_output
 filecounts=$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_${project}_output)
 for file in $filecounts; do
+    mkdir -p /etc/fastd/$project/peers/
     awk "{ if(a) print }; /^####$file.conf$/{a=1}; /^$/{a=0};" /tmp/fastd_${project}_output | sed 's/ float;/;/g' > /etc/fastd/$project/peers/$file
     echo 'float yes;' >> /etc/fastd/$project/peers/$file
 
     # ask for Broker and select the tunnel
     IP=$(awk -F\" '/remote/ {print $2}' /etc/fastd/${project}/peers/$file)
-    if [ "l2tp" = "$(wget -T10 $IP/vpn.txt -O - 2>/dev/null)" ]; then
+    if [ "l2tp" = "$(wget -4 -T10 $IP/vpn.txt -O - 2>/dev/null)" ]; then
         # Gateway offers l2tp
         FDPORT=$(awk '/remote/{gsub(";", ""); print $5}' /etc/fastd/${project}/peers/$file)
         L2PORT=$((FDPORT + 10000))
@@ -78,10 +77,9 @@ if ping -w5 -c3 "$test_ipv4_host1" &>/dev/null ||
 
         # fastd start/stop for various situations
         if [ "$(ls /etc/fastd/${project}/peers/* 2>/dev/null)" ]; then
-            [ -d /proc/$(cat /tmp/run/fastd.${project}.pid) ] || /etc/init.d/fastd start
+            [ -d /proc/$(cat /tmp/run/fastd.mesh_vpn.pid) ] || /etc/init.d/fastd start
         else
-            [ -d /proc/$(cat /tmp/run/fastd.${project}.pid) ] && /etc/init.d/fastd stop
+            [ -d /proc/$(cat /tmp/run/fastd.mesh_vpn.pid) ] && /etc/init.d/fastd stop
         fi
-
     fi
 fi
