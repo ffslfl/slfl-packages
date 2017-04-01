@@ -11,7 +11,7 @@ uci batch <<EOF
   set fastd.${project}.syslog_level='warn'
   set fastd.${project}.method='salsa2012+umac'
   set fastd.${project}.mode='tap'
-  set fastd.${project}.interface="mesh0"
+  set fastd.${project}.interface="${project}VPN"
   set fastd.${project}.mtu='1426'
   set fastd.${project}.on_up="/etc/fastd/${project}/up.sh"
   set fastd.${project}.secure_handshakes='0'
@@ -21,6 +21,6 @@ EOF
 [ ! -d /etc/fastd/${project} ] &&  mkdir -p /etc/fastd/${project}
 ln -s /tmp/fastd_${project}_peers /etc/fastd/${project}/peers
 echo "#!/bin/sh" > /etc/fastd/${project}/up.sh
-echo "ip link set up dev mesh0" >> /etc/fastd/${project}/up.sh
-echo "batctl if add mesh0" >> /etc/fastd/${project}/up.sh
+echo "ip link set up dev ${project}VPN" >> /etc/fastd/${project}/up.sh
+echo "batctl if add ${project}VPN" >> /etc/fastd/${project}/up.sh
 chmod +x /etc/fastd/${project}/up.sh
