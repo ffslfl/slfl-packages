@@ -9,7 +9,7 @@ uci batch <<EOF
   set fastd.${project}.enabled='1'
   set fastd.${project}.config_peer_dir="/etc/fastd/${project}/peers"
   set fastd.${project}.syslog_level='warn'
-  set fastd.${project}.method='null'
+  set fastd.${project}.method='salsa2012+umac'
   set fastd.${project}.mode='tap'
   set fastd.${project}.interface="${project}VPN"
   set fastd.${project}.mtu='1426'
