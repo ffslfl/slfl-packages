@@ -27,7 +27,7 @@ for file in $filecounts; do
         uci set tunneldigger.$count=broker
         uci set tunneldigger.$count.address="$IP:$L2PORT"
         uci set tunneldigger.$count.uuid="$UUID"
-        uci set tunneldigger.$count.interface="mesh0"
+        uci set tunneldigger.$count.interface="l2tp$count"
         uci set tunneldigger.$count.enabled="1"
         uci set tunneldigger.$count.hook_script='/etc/tunneldigger/tunneldigger.hook'
         uci commit tunneldigger
