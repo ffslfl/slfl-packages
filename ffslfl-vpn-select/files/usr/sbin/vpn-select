@@ -1,6 +1,7 @@
 #!/bin/sh
 
 iptables -t nat -I OUTPUT -o lo -d 127.0.0.1 -p udp --dport 53 -j DNAT --to-destination :54
+brctl addif l2p_bridge mesh0
 
 make_config() {
 # remove old config
@@ -69,6 +70,8 @@ if ping -w5 -c3 "$test_ipv4_host1" &>/dev/null ||
         make_config
         /etc/init.d/fastd start
         /etc/init.d/tunneldigger start
+        brctl addif l2p_bridge "${project}VPN"                                                               
+        brctl addif l2p_bridge "l2tp0"
     else
         # check if new tunneldigger conf is different
         sumold=$(sha256sum /etc/config/tunneldigger)
@@ -83,5 +86,7 @@ if ping -w5 -c3 "$test_ipv4_host1" &>/dev/null ||
         else
             [ -d /proc/$(cat /tmp/run/fastd.mesh_vpn.pid) ] && /etc/init.d/fastd stop
         fi
+        brctl addif l2p_bridge "${project}VPN"                                                               
+        brctl addif l2p_bridge "l2tp0"
     fi
 fi
