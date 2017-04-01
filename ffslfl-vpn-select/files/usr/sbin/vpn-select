@@ -18,7 +18,7 @@ for file in $filecounts; do
 
     # ask for Broker and select the tunnel
     IP=$(awk -F\" '/remote/ {print $2}' /etc/fastd/${project}/peers/$file)
-    if [ "l2tp" = "$(wget -4 -T10 $IP/vpn.txt -O - 2>/dev/null)" ]; then
+    if [ "l2tp" = "$(wget -4 -T10 http://$IP/vpn.txt -O - 2>/dev/null)" ]; then
         # Gateway offers l2tp
         FDPORT=$(awk '/remote/{gsub(";", ""); print $5}' /etc/fastd/${project}/peers/$file)
         L2PORT=$((FDPORT + 10000))
