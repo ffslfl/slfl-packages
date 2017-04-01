@@ -1,6 +1,6 @@
 /etc/init.d/fastd disable
 
-project=project="ffslfl"
+project="ffslfl"
 
 >/etc/config/fastd
 
