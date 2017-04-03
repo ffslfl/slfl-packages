@@ -3,6 +3,7 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=ffslfl-fastd
 PKG_VERSION:=1
 PKG_RELEASE:=2
+PKG_BUILD_DEPENDS := respondd
 
 include $(INCLUDE_DIR)/package.mk
 
