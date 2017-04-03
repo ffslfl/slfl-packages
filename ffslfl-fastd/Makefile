@@ -27,14 +27,17 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
+	$(CP) ./src/* $(PKG_BUILD_DIR)/
+endef
+
+define Build/Compile
+	$(call Build/Compile/Default)
 endef
 
 define Package/ffslfl-fastd/install
 	$(CP) ./files/* $(1)/
-endef
-
-define Build/Compile
-			#Nothing to do
+	$(INSTALL_DIR) $(1)/lib/gluon/respondd
+	$(CP) $(PKG_BUILD_DIR)/respondd.so $(1)/lib/gluon/respondd/mesh-vpn-fastd.so
 endef
 
 $(eval $(call BuildPackage,ffslfl-fastd))
