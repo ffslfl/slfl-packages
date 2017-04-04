@@ -17,7 +17,8 @@ define Package/ffslfl-fastd
              +@FASTD_ENABLE_CIPHER_NULL \
              +@FASTD_WITH_STATUS_SOCKET \
              +fastd \
-             +fff-random
+             +fff-random \
+	     +libgluonutil
 endef
 
 define Package/ffslfl-fastd/description
