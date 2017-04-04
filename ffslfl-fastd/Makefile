@@ -18,7 +18,8 @@ define Package/ffslfl-fastd
              +@FASTD_WITH_STATUS_SOCKET \
              +fastd \
              +fff-random \
-	     +libgluonutil
+	     +libgluonutil \
+	     +gluon-core
 endef
 
 define Package/ffslfl-fastd/description
