@@ -5,22 +5,23 @@ project="ffslfl"
 >/etc/config/fastd
 
 uci batch <<EOF
-  set fastd.${project}='fastd'
-  set fastd.${project}.enabled='1'
-  set fastd.${project}.config_peer_dir="/etc/fastd/${project}/peers"
-  set fastd.${project}.syslog_level='warn'
-  set fastd.${project}.method='salsa2012+umac'
-  set fastd.${project}.mode='tap'
-  set fastd.${project}.interface="${project}VPN"
-  set fastd.${project}.mtu='1426'
-  set fastd.${project}.on_up="/etc/fastd/${project}/up.sh"
-  set fastd.${project}.secure_handshakes='0'
-  set fastd.${project}.secret="generate"
+  set fastd.mesh_vpn='fastd'
+  set fastd.mesh_vpn.enabled='1'
+  set fastd.mesh_vpn.config_peer_dir="/etc/fastd/mesh_vpn/peers"
+  set fastd.mesh_vpn.syslog_level='warn'
+  set fastd.mesh_vpn.method='salsa2012+umac'
+  set fastd.mesh_vpn.mode='tap'
+  set fastd.mesh_vpn.interface="mesh_vpn"
+  set fastd.mesh_vpn.mtu='1426'
+  set fastd.mesh_vpn.on_up="/etc/fastd/mesh_vpn/up.sh"
+  set fastd.mesh_vpn.secure_handshakes='0'
+  set fastd.mesh_vpn.secret="generate"
+  set fastd.mesh_vpn.pubkey=""
 EOF
 
-[ ! -d /etc/fastd/${project} ] &&  mkdir -p /etc/fastd/${project}
-ln -s /tmp/fastd_${project}_peers /etc/fastd/${project}/peers
-echo "#!/bin/sh" > /etc/fastd/${project}/up.sh
-echo "ip link set up dev ${project}VPN" >> /etc/fastd/${project}/up.sh
-echo "batctl if add ${project}VPN" >> /etc/fastd/${project}/up.sh
-chmod +x /etc/fastd/${project}/up.sh
+[ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
+ln -s /tmp/fastd_ffslfl_peers /etc/fastd/mesh_vpn/peers
+echo "#!/bin/sh" > /etc/fastd/mesh_vpn/up.sh
+echo "ip link set up dev mesh_vpn" >> /etc/fastd/mesh_vpn/up.sh
+echo "batctl if add mesh_vpn" >> /etc/fastd/mesh_vpn/up.sh
+chmod +x /etc/fastd/mesh_vpn/up.sh
