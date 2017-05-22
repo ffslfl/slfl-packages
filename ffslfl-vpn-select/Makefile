@@ -26,12 +26,13 @@ define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
 endef
 
-define Package/ffslfl-vpn-select/install
-       $(CP) ./files/* $(1)/
+define Build/Compile
+	$(call GluonSrcDiet,./luasrc,$(PKG_BUILD_DIR)/luadest/)
 endef
 
-define Build/Compile
-			#Nothing to do
+define Package/ffslfl-vpn-select/install
+       $(CP) ./files/* $(1)/
+       $(CP) $(PKG_BUILD_DIR)/luadest/* $(1)/
 endef
 
 $(eval $(call BuildPackage,ffslfl-vpn-select))
