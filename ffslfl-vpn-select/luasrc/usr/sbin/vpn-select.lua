@@ -42,10 +42,51 @@ if pubkey == '' then
     pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
 end
 
+function make_config {
+    -- Cleanup tmp dir
+    fs.remove("/tmp/fastd_mesh_vpn_peers/")
+    fs.mkdir("/tmp/fastd_mesh_vpn_peers/")
+    
+    
+
+}
+
 if isdir('/tmp/fastd_mesh_vpn_peers') then
-    -- WOOOOW
+    local sumold = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
+    make_config()
+    local sumnew = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
+    if sumold != sumnew then
+        io.popen('/etc/init.d/tunneldigger restart')
+    end
+    io.popen('/etc/init.d/fastd reload')
+
+    if isdir('/etc/fastd/mesh_vpn/peers/') then
+        if not exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'))) then
+            io.popen('/etc/init.d/fastd start')
+        end
+    else
+        if exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'))) then
+            io.popen('/etc/init.d/fastd stop')
+        end
+    end
+    
+    io.popen('brctl addif l2p_bridge "mesh_vpn"')
+    io.popen('brctl addif l2p_bridge "l2tp"')
+
+
 else
     fs.mkdir('/tmp/fastd_mesh_vpn_peers')
+    if not io.popen('egrep "option secret \'[0-9a-f]{64}\'" /etc/config/fastd &>/dev/null') then
+        local secret = io.popen('fastd --generate-key 2>&1 |  awk \'/[Ss]ecret/ { print $2 }\'')
+        uci:set('fastd', 'mesh_vpn', 'secret', secret)
+        uci:save('fastd')
+        uci:commit('fastd')
+    end
+    make_config()
+    io.popen('/etc/init.d/fastd start')
+    io.popen('/etc/init.d/tunneldigger start')
+    io.popen('brctl addif l2p_bridge "mesh_vpn"')
+    io.popen('brctk addif l2p_brisge "l2tp"')
 end
 
 
