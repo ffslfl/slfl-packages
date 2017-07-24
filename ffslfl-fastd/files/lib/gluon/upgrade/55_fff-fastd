@@ -1,7 +1,5 @@
 /etc/init.d/fastd disable
 
-project="ffslfl"
-
 >/etc/config/fastd
 
 uci batch <<EOF

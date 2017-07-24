@@ -4,39 +4,39 @@ iptables -t nat -I OUTPUT -o lo -d 127.0.0.1 -p udp --dport 53 -j DNAT --to-dest
 brctl addif l2p_bridge mesh0
 
 make_config() {
-# remove old config
->/etc/config/tunneldigger
-rm /tmp/fastd_${project}_peers/*
-count=0
-# get fastd peers
-pubkey=$(echo "secret \"$(uci get fastd.mesh_vpn.secret)\";" | fastd -c - --show-key --machine-readable)
-wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=$mac&name=$hostname&port=$port&key=$pubkey&lat=$lat&long=$long" -O /tmp/fastd_${project}_output
-filecounts=$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_${project}_output)
-for file in $filecounts; do
-    mkdir -p /etc/fastd/$project/peers/
-    awk "{ if(a) print }; /^####$file.conf$/{a=1}; /^$/{a=0};" /tmp/fastd_${project}_output | sed 's/ float;/;/g' > /etc/fastd/$project/peers/$file
-    echo 'float yes;' >> /etc/fastd/$project/peers/$file
+    # remove old config
+    >/etc/config/tunneldigger
+    rm /tmp/fastd_${project}_peers/*
+    count=0
+    # get fastd peers
+    pubkey=$(echo "secret \"$(uci get fastd.mesh_vpn.secret)\";" | fastd -c - --show-key --machine-readable)
+    wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=$mac&name=$hostname&port=$port&key=$pubkey&lat=$lat&long=$long" -O /tmp/fastd_${project}_output
+    filecounts=$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_${project}_output)
+    for file in $filecounts; do
+        mkdir -p /etc/fastd/$project/peers/
+        awk "{ if(a) print }; /^####$file.conf$/{a=1}; /^$/{a=0};" /tmp/fastd_${project}_output | sed 's/ float;/;/g' > /etc/fastd/$project/peers/$file
+        echo 'float yes;' >> /etc/fastd/$project/peers/$file
 
-    # ask for Broker and select the tunnel
-    IP=$(awk -F\" '/remote/ {print $2}' /etc/fastd/${project}/peers/$file)
-    if [ "l2tp" = "$(wget -4 -T10 http://$IP/vpn.txt -O - 2>/dev/null)" ]; then
-        # Gateway offers l2tp
-        FDPORT=$(awk '/remote/{gsub(";", ""); print $5}' /etc/fastd/${project}/peers/$file)
-        L2PORT=$((FDPORT + 10000))
-        UUID=$hostname
+        # ask for Broker and select the tunnel
+        IP=$(awk -F\" '/remote/ {print $2}' /etc/fastd/${project}/peers/$file)
+        if [ "l2tp" = "$(wget -4 -T10 http://$IP/vpn.txt -O - 2>/dev/null)" ]; then
+            # Gateway offers l2tp
+            FDPORT=$(awk '/remote/{gsub(";", ""); print $5}' /etc/fastd/${project}/peers/$file)
+            L2PORT=$((FDPORT + 10000))
+            UUID=$hostname
 
-        uci set tunneldigger.$count=broker
-        uci set tunneldigger.$count.address="$IP:$L2PORT"
-        uci set tunneldigger.$count.uuid="$UUID"
-        uci set tunneldigger.$count.interface="l2tp$count"
-        uci set tunneldigger.$count.enabled="1"
-        uci set tunneldigger.$count.hook_script='/etc/tunneldigger/tunneldigger.hook'
-        uci commit tunneldigger
-        count=$((count + 1))
-        # remove this fastd-peer
-        rm /etc/fastd/${project}/peers/$file
-    fi
-done
+            uci set tunneldigger.$count=broker
+            uci set tunneldigger.$count.address="$IP:$L2PORT"
+            uci set tunneldigger.$count.uuid="$UUID"
+            uci set tunneldigger.$count.interface="l2tp$count"
+            uci set tunneldigger.$count.enabled="1"
+            uci set tunneldigger.$count.hook_script='/etc/tunneldigger/tunneldigger.hook'
+            uci commit tunneldigger
+            count=$((count + 1))
+            # remove this fastd-peer
+            rm /etc/fastd/${project}/peers/$file
+        fi
+    done
 }
 
 # main

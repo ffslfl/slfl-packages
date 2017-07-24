@@ -3,8 +3,8 @@
 local site = require 'gluon.site_config'
 local util = require 'gluon.util'
 local fs = require 'nixio.fs'
-
 local uci = require('simple-uci').cursor()
+
 --- Check if a file or directory exists in this path
 function exists(file)
     local ok, err, code = os.rename(file, file)
@@ -20,6 +20,16 @@ end
 --- Check if a directory exists in this path
 function isdir(path)
     return exists(path.."/")
+end
+
+--- Split Strings if needed
+function split(str, delim)
+    local result,pat,lastPos = {},"(.-)" .. delim .. "()",1
+    for part, pos in string.gfind(str, pat) do
+        table.insert(result, part); lastPos = pos
+    end
+    table.insert(result, string.sub(str, lastPos))
+    return result
 end
 
 uci:section('firewall', 'include', 'mesh_vpn_dns', {
@@ -46,9 +56,52 @@ function make_config {
     -- Cleanup tmp dir
     fs.remove("/tmp/fastd_mesh_vpn_peers/")
     fs.mkdir("/tmp/fastd_mesh_vpn_peers/")
-    
-    
 
+    io.popen('wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=' .. mac .. '&name=' .. hostname .. '&port=' .. port .. '&key=' .. pubkey.. '&lat=' .. lat .. '&long=' .. long.. ' -O /tmp/fastd_mesh_vpn_output ', 'r')
+    local files = io.popen("$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_mesh_vpn_output)", 'r')
+    local GWTable = split(files, "\n")
+    local firstGW = ''
+    if GWTable[0] ~= nil then
+        firstGW = GWTable[0]
+    else
+        firstGW = GWTabletbl[1]
+    end
+
+    io.popen("awk '{ if(a) print }; /^####" .. firstGW .. ".conf$/{a=1}; /^$/{a=0};' /tmp/fastd_mesh_vpn_output | sed 's/ float;/;/g' > /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
+    io.popen("echo 'float yes;' >> /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
+
+    local ip = io.popen("awk -F\\\" '/remote/ {print $2}' /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
+
+    local enabled = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
+    if enabled == nil then
+        if uci:get_first('tunneldigger', 'broker', 'interface') == "mesh-vpn" then
+            enabled = uci:get_first('tunneldigger', 'broker', 'enabled')
+        end
+    end
+    if enabled == nil then
+        enabled = false
+    end
+
+    local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r')
+
+    if enabledGW != "0" then
+        -- Delete old broker config section
+        if not uci:get('tunneldigger', 'mesh_vpn') then
+            uci:delete_all('tunneldigger', 'broker')
+        end
+
+        uci:section('tunneldigger', 'broker', 'mesh_vpn', {
+            enabled = enabled,
+            uuid = util.node_id(),
+            interface = 'mesh-vpn',
+            bind_interface = 'br-wan',
+            group = 'gluon-mesh-vpn',
+            broker_selection = 'usage',
+            address = ip,
+        })
+
+        uci:save('tunneldigger')
+    end
 }
 
 if isdir('/tmp/fastd_mesh_vpn_peers') then
@@ -69,11 +122,6 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
             io.popen('/etc/init.d/fastd stop')
         end
     end
-    
-    io.popen('brctl addif l2p_bridge "mesh_vpn"')
-    io.popen('brctl addif l2p_bridge "l2tp"')
-
-
 else
     fs.mkdir('/tmp/fastd_mesh_vpn_peers')
     if not io.popen('egrep "option secret \'[0-9a-f]{64}\'" /etc/config/fastd &>/dev/null') then
@@ -85,8 +133,6 @@ else
     make_config()
     io.popen('/etc/init.d/fastd start')
     io.popen('/etc/init.d/tunneldigger start')
-    io.popen('brctl addif l2p_bridge "mesh_vpn"')
-    io.popen('brctk addif l2p_brisge "l2tp"')
 end
 
 
@@ -102,33 +148,4 @@ end
 
 
 
-io.popen('wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=' .. mac .. '&name=' .. hostname .. '&port=' .. port .. '&key=' .. pubkey.. '&lat=' .. lat .. '&long=' .. long.. ' -O /tmp/fastd_ffslfl_output ', 'r')
 
-
-
-local enabled = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
-if enabled == nil then
-    if uci:get_first('tunneldigger', 'broker', 'interface') == "mesh-vpn" then
-        enabled = uci:get_first('tunneldigger', 'broker', 'enabled')
-    end
-end
-if enabled == nil then
-    enabled = site.mesh_vpn.enabled or false
-end
-
--- Delete old broker config section
-if not uci:get('tunneldigger', 'mesh_vpn') then
-    uci:delete_all('tunneldigger', 'broker')
-end
-
-uci:section('tunneldigger', 'broker', 'mesh_vpn', {
-    enabled = enabled,
-    uuid = util.node_id(),
-    interface = 'mesh-vpn',
-    bind_interface = 'br-wan',
-    group = 'gluon-mesh-vpn',
-    broker_selection = 'usage',
-    address = site.mesh_vpn.tunneldigger.brokers,
-})
-
-uci:save('tunneldigger')
