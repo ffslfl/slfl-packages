@@ -79,7 +79,7 @@ function make_config {
         end
     end
     if enabled == nil then
-        enabled = false
+        enabled = site.mesh_vpn.enabled or false
     end
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r')
@@ -134,18 +134,3 @@ else
     io.popen('/etc/init.d/fastd start')
     io.popen('/etc/init.d/tunneldigger start')
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
