@@ -39,7 +39,7 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
 })
 
 local mac_raw = util.trim(fs.readfile('/sys/class/net/br-wan/address'))
-local mac = mac_raw.gsub(":", "").upper
+local mac = string.gsub(mac_raw, ":", "").upper
 local hostname = util.trim(fs.readfile('/proc/sys/kernel/hostname'))
 local port = ''
 local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
@@ -58,7 +58,7 @@ function make_config()
     fs.mkdir("/tmp/fastd_mesh_vpn_peers/")
 
     io.popen('wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=' .. mac .. '&name=' .. hostname .. '&port=' .. port .. '&key=' .. pubkey.. '&lat=' .. lat .. '&long=' .. long.. ' -O /tmp/fastd_mesh_vpn_output ', 'r')
-    local files = io.popen("$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_mesh_vpn_output)", 'r')
+    local files = io.popen("$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)", 'r')
     local GWTable = split(files, "\n")
     local firstGW = ''
     if GWTable[0] ~= nil then
@@ -84,7 +84,7 @@ function make_config()
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r')
 
-    if enabledGW != "0" then
+    if enabledGW ~= "0" then
         -- Delete old broker config section
         if not uci:get('tunneldigger', 'mesh_vpn') then
             uci:delete_all('tunneldigger', 'broker')
@@ -108,7 +108,7 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
     local sumold = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
     make_config()
     local sumnew = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
-    if sumold != sumnew then
+    if sumold ~= sumnew then
         io.popen('/etc/init.d/tunneldigger restart')
     end
     io.popen('/etc/init.d/fastd reload')
