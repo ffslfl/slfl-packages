@@ -4,7 +4,9 @@ PKG_NAME:=ffslfl-vpn-select
 PKG_VERSION:=1
 PKG_RELEASE:=1
 
-include $(INCLUDE_DIR)/package.mk
+PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
+
+include $(TOPDIR)/../package/gluon.mk
 
 define Package/ffslfl-vpn-select
     SECTION:=base
@@ -25,6 +27,9 @@ endef
 
 define Build/Prepare
 	mkdir -p $(PKG_BUILD_DIR)
+endef
+
+define Build/Configure
 endef
 
 define Build/Compile
