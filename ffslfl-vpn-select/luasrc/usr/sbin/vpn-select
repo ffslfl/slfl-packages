@@ -57,15 +57,16 @@ function make_config()
     fs.remove("/tmp/fastd_mesh_vpn_peers/")
     fs.mkdir("/tmp/fastd_mesh_vpn_peers/")
 
-    io.popen('wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=' .. mac .. '&name=' .. hostname .. '&port=' .. port .. '&key=' .. pubkey.. '&lat=' .. lat .. '&long=' .. long.. ' -O /tmp/fastd_mesh_vpn_output ', 'r')
-    local files = io.popen("$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)", 'r')
+    local files = io.popen("wget -4 -T15 'http://keyserver.ffslfl.net/index.php?mac=" .. mac .. "&name=" .. hostname .. "&port=" .. port .. "&key=" .. pubkey.. "&lat=" .. lat .. "&long=" .. long.. "' -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\"", 'r'):read('*all')
     local GWTable = split(files, "\n")
     local firstGW = ''
     if GWTable[0] ~= nil then
         firstGW = GWTable[0]
     else
-        firstGW = GWTabletbl[1]
+        firstGW = GWTable[1]
     end
+    
+    fs.mkdir("/etc/fastd/mesh_vpn/peers/")
 
     io.popen("awk '{ if(a) print }; /^####" .. firstGW .. ".conf$/{a=1}; /^$/{a=0};' /tmp/fastd_mesh_vpn_output | sed 's/ float;/;/g' > /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
     io.popen("echo 'float yes;' >> /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
