@@ -13,7 +13,8 @@ define Package/ffslfl-vpn-select
     URL:=http://ffslfl.net
     DEPENDS:=+@BUSYBOX_CONFIG_FEATURE_WGET_TIMEOUT \
              +ffslfl-tunneldigger \
-             +ffslfl-fastd
+             +ffslfl-fastd \
+             +gluon-mesh-vpn-core
 endef
 
 define Package/ffslfl-vpn-select/description
