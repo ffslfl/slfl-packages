@@ -39,38 +39,40 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
 })
 
 local mac_raw = util.trim(fs.readfile('/sys/class/net/br-wan/address'))
-local mac = mac_raw.gsub(":", "").upper
+local mac = string.upper(string.gsub(mac_raw, ":", ""))
 local hostname = util.trim(fs.readfile('/proc/sys/kernel/hostname'))
 local port = ''
 local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
-local lat = uci:get_first('gluon-node-info', 'location', 'latitude')
-local long = uci:get_first('gluon-node-info', 'location', 'longitude')
+local lat = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'latitude') or ""
+local long = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'longitude') or ""
 
 if pubkey == '' then
-    io.popen('uci set fastd.mesh_vpn.pubkey="secret \"$(uci get fastd.mesh_vpn.secret)\";" | fastd -c - --show-key --machine-readable')
-    io.popen('uci commit fastd')
+    local secret = uci:get("fastd", "mesh_vpn", "secret")
+    io.popen('uci set fastd.mesh_vpn.pubkey=$(echo "secret \\"' .. require('simple-uci').cursor():get("fastd", "mesh_vpn", "secret") .. '\\";" | fastd -c - --show-key --machine-readable) && uci commit fastd')
     pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
 end
 
 function make_config()
     -- Cleanup tmp dir
     fs.remove("/tmp/fastd_mesh_vpn_peers/")
-    fs.mkdir("/tmp/fastd_mesh_vpn_peers/")
+    fs.remove("/etc/fastd/mesh_vpn/peers/")
+    fs.mkdirr("/tmp/fastd_mesh_vpn_peers/")
 
-    io.popen('wget -4 -T15 "http://keyserver.ffslfl.net/index.php?mac=' .. mac .. '&name=' .. hostname .. '&port=' .. port .. '&key=' .. pubkey.. '&lat=' .. lat .. '&long=' .. long.. ' -O /tmp/fastd_mesh_vpn_output ', 'r')
-    local files = io.popen("$(awk '/^####/ { gsub(/^####/, "", $0); gsub(/.conf/, "", $0); print $0; }' /tmp/fastd_mesh_vpn_output)", 'r')
+    local files = io.popen("wget -4 -T15 'http://keyserver.ffslfl.net/index.php?mac=" .. mac .. "&name=" .. hostname .. "&port=" .. port .. "&key=" .. pubkey.. "&lat=" .. lat .. "&long=" .. long.. "' -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\"", 'r'):read('*all')
     local GWTable = split(files, "\n")
     local firstGW = ''
     if GWTable[0] ~= nil then
         firstGW = GWTable[0]
     else
-        firstGW = GWTabletbl[1]
+        firstGW = GWTable[1]
     end
+    
+    fs.mkdirr("/etc/fastd/mesh_vpn/peers/")
 
-    io.popen("awk '{ if(a) print }; /^####" .. firstGW .. ".conf$/{a=1}; /^$/{a=0};' /tmp/fastd_mesh_vpn_output | sed 's/ float;/;/g' > /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
+    io.popen("awk '{ if(a) print }; /^####" .. firstGW .. ".conf$/{a=1}; /^$/{a=0};' /tmp/fastd_mesh_vpn_output | sed 's/ float;/;/g' > /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r'):
     io.popen("echo 'float yes;' >> /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
 
-    local ip = io.popen("awk -F\\\" '/remote/ {print $2}' /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r')
+    local ip = io.popen("awk -F\\\" '/remote/ {print $2}' /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r'):read('*all')
 
     local enabled = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
     if enabled == nil then
@@ -82,9 +84,9 @@ function make_config()
         enabled = site.mesh_vpn.enabled or false
     end
 
-    local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r')
+    local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
 
-    if enabledGW != "0" then
+    if enabledGW ~= "0" then
         -- Delete old broker config section
         if not uci:get('tunneldigger', 'mesh_vpn') then
             uci:delete_all('tunneldigger', 'broker')
@@ -105,20 +107,20 @@ function make_config()
 end
 
 if isdir('/tmp/fastd_mesh_vpn_peers') then
-    local sumold = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
+    local sumold = io.popen("sha256sum /etc/config/tunneldigger"):read('*all')
     make_config()
-    local sumnew = io.popen(string.format("exec sha256sum '%s'", "/etc/config/tunneldigger"))
-    if sumold != sumnew then
+    local sumnew = io.popen("sha256sum /etc/config/tunneldigger"):read('*all')
+    if sumold ~= sumnew then
         io.popen('/etc/init.d/tunneldigger restart')
     end
     io.popen('/etc/init.d/fastd reload')
 
     if isdir('/etc/fastd/mesh_vpn/peers/') then
-        if not exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'))) then
+        if not exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'):read('*all'))) then
             io.popen('/etc/init.d/fastd start')
         end
     else
-        if exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'))) then
+        if exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'):read('*all'))) then
             io.popen('/etc/init.d/fastd stop')
         end
     end
