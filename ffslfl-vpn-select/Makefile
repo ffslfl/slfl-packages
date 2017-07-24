@@ -16,6 +16,7 @@ define Package/ffslfl-vpn-select
     DEPENDS:=+@BUSYBOX_CONFIG_FEATURE_WGET_TIMEOUT \
              +ffslfl-tunneldigger \
              +ffslfl-fastd \
+	     +gluon-core \
              +gluon-mesh-vpn-core
 endef
 
