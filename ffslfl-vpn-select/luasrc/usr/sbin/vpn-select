@@ -39,16 +39,16 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
 })
 
 local mac_raw = util.trim(fs.readfile('/sys/class/net/br-wan/address'))
-local mac = string.gsub(mac_raw, ":", "").upper
+local mac = string.upper(string.gsub(mac_raw, ":", ""))
 local hostname = util.trim(fs.readfile('/proc/sys/kernel/hostname'))
 local port = ''
 local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
-local lat = uci:get_first('gluon-node-info', 'location', 'latitude')
-local long = uci:get_first('gluon-node-info', 'location', 'longitude')
+local lat = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'latitude') or ""
+local long = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'longitude') or ""
 
 if pubkey == '' then
-    io.popen('uci set fastd.mesh_vpn.pubkey="secret \"$(uci get fastd.mesh_vpn.secret)\";" | fastd -c - --show-key --machine-readable')
-    io.popen('uci commit fastd')
+    local secret = uci:get("fastd", "mesh_vpn", "secret")
+    io.popen('uci set fastd.mesh_vpn.pubkey=$(echo "secret \\"' .. require('simple-uci').cursor():get("fastd", "mesh_vpn", "secret") .. '\\";" | fastd -c - --show-key --machine-readable) && uci commit fastd')
     pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
 end
 
