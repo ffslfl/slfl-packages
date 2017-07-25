@@ -19,6 +19,7 @@ define Package/ffslfl-fastd
              +fastd \
              +fff-random \
 	     +libgluonutil \
+	     +gluon-mesh-vpn-core \
 	     +gluon-core
 endef
 
