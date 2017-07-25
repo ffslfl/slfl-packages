@@ -24,11 +24,11 @@ define Build/Prepare
 endef
 
 define Package/fff-random/install
-    $(CP) ./files/* $(1)/
+	$(CP) ./files/* $(1)/
 endef
 
 define Build/Compile
-			#Nothing to do
+	#Nothing to do
 endef
 
 $(eval $(call BuildPackage,fff-random))
