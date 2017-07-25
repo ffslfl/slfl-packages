@@ -94,6 +94,17 @@ function make_config()
     end
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
+    
+    local fdport_raw = io.popen("awk '/remote/{gsub(\";\", \"\"); print $5}' /etc/fastd/mesh_vpn/peers/" .. firstGW .. ""):read('*all')
+    local fdportTable = split(fdport_raw, "\n")
+    local fdport = ''
+    if fdportTable[0] ~= nil then
+        fdport = fdportTable[0]
+    else
+        fdport = fdportTable[1]
+    end
+    
+    local l2port = fdport + 10000
 
     if enabledGW ~= "0" then
         -- Delete old broker config section
@@ -108,7 +119,7 @@ function make_config()
             bind_interface = 'br-wan',
             group = 'gluon-mesh-vpn',
             broker_selection = 'usage',
-            address = ip,
+            address = "" .. ip .. ":" .. l2port .. "",
         })
 
         uci:commit('tunneldigger')
