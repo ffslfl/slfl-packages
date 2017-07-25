@@ -9,7 +9,7 @@ uci batch <<EOF
   set fastd.mesh_vpn.syslog_level='warn'
   set fastd.mesh_vpn.method='salsa2012+umac'
   set fastd.mesh_vpn.mode='tap'
-  set fastd.mesh_vpn.interface="mesh_vpn"
+  set fastd.mesh_vpn.interface="mesh-vpn"
   set fastd.mesh_vpn.mtu='1426'
   set fastd.mesh_vpn.on_up="/etc/fastd/mesh_vpn/up.sh"
   set fastd.mesh_vpn.secure_handshakes='0'
@@ -20,6 +20,6 @@ EOF
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
 ln -s /tmp/fastd_ffslfl_peers /etc/fastd/mesh_vpn/peers
 echo "#!/bin/sh" > /etc/fastd/mesh_vpn/up.sh
-echo "ip link set up dev mesh_vpn" >> /etc/fastd/mesh_vpn/up.sh
-echo "batctl if add mesh_vpn" >> /etc/fastd/mesh_vpn/up.sh
+echo "ip link set up dev mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
+echo "batctl if add mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
 chmod +x /etc/fastd/mesh_vpn/up.sh
