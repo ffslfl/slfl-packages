@@ -15,7 +15,7 @@ uci batch <<EOF
   set fastd.fastd.mesh_vpn.secure_handshakes='0'
   set fastd.fastd.mesh_vpn.secret="generate"
   set fastd.fastd.mesh_vpn.pubkey=""
-  set fastd.fastd.mesh_vpn.status_socket = "/var/run/fastd.mesh_vpn.socket"
+  set fastd.fastd.mesh_vpn.status_socket="/var/run/fastd.mesh_vpn.socket"
 EOF
 
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
