@@ -62,6 +62,7 @@ function make_config()
     fs.remove("/tmp/fastd_mesh_vpn_peers/")
     fs.remove("/etc/fastd/mesh_vpn/peers/")
     fs.mkdirr("/tmp/fastd_mesh_vpn_peers/")
+    fs.mkdirr("/etc/fastd/mesh_vpn/peers/")
 
     local files = io.popen("wget -4 -T15 'http://keyserver.ffslfl.net/index.php?mac=" .. mac .. "&name=" .. hostname .. "&port=" .. port .. "&key=" .. pubkey.. "&lat=" .. lat .. "&long=" .. long.. "' -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\"", 'r'):read('*all')
     local GWTable = split(files, "\n")
@@ -71,8 +72,6 @@ function make_config()
     else
         firstGW = GWTable[1]
     end
-    
-    fs.mkdirr("/etc/fastd/mesh_vpn/peers/")
 
     local ip_raw = io.popen("awk '{ if(a) print }; /^####" .. firstGW .. ".conf$/{a=1}; /^$/{a=0};' /tmp/fastd_mesh_vpn_output | sed 's/ float;/;/g' > /etc/fastd/mesh_vpn/peers/" .. firstGW .. " && echo 'float yes;' >> /etc/fastd/mesh_vpn/peers/" .. firstGW .. " && awk -F\\\" '/remote/ {print $2}' /etc/fastd/mesh_vpn/peers/" .. firstGW .. "", 'r'):read('*all')
     local ipTable = split(ip_raw, "\n")
