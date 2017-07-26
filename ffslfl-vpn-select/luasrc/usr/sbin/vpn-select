@@ -42,14 +42,14 @@ local mac_raw = util.trim(fs.readfile('/sys/class/net/br-wan/address'))
 local mac = string.upper(string.gsub(mac_raw, ":", ""))
 local hostname = util.trim(fs.readfile('/proc/sys/kernel/hostname'))
 local port = ''
-local pubkey = uci:get("fastd", "fastd", "mesh_vpn", "pubkey")
+local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
 local lat = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'latitude') or ""
 local long = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'longitude') or ""
 
 function make_config()
     if (pubkey == nil or pubkey == "") then
-        local secret = uci:get("fastd", "fastd", "mesh_vpn", "secret")
-        pubkey_raw =  io.popen('uci set fastd.fastd.mesh_vpn.pubkey=$(echo "secret \\"' .. secret .. '\\";" | fastd -c - --show-key --machine-readable) && uci commit fastd && uci get fastd.fastd.mesh_vpn.pubkey'):read('*all')
+        local secret = uci:get("fastd", "mesh_vpn", "secret")
+        pubkey_raw =  io.popen('uci set fastd.mesh_vpn.pubkey=$(echo "secret \\"' .. secret .. '\\";" | fastd -c - --show-key --machine-readable) && uci commit fastd && uci get fastd.mesh_vpn.pubkey'):read('*all')
         local pubkeyTable = split(pubkey_raw, "\n")
         if pubkeyTable[0] ~= nil then
             pubkey = pubkeyTable[0]
