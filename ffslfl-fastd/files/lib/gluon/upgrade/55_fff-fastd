@@ -17,7 +17,6 @@ uci batch <<EOF
   set fastd.mesh_vpn.pubkey=""
   set fastd.mesh_vpn.status_socket="/var/run/fastd.mesh_vpn.socket"
 EOF
-uci commit fastd
 
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
 ln -s /tmp/fastd_ffslfl_peers /etc/fastd/mesh_vpn/peers
