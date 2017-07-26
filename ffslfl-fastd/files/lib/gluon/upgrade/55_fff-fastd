@@ -6,8 +6,8 @@ uci batch <<EOF
   set fastd.fastd.mesh_vpn='fastd'
   set fastd.fastd.mesh_vpn.enabled='1'
   set fastd.fastd.mesh_vpn.config_peer_dir="/etc/fastd/mesh_vpn/peers"
-  set fastd.fastd.fastd.fastd.mesh_vpn.syslog_level='warn'
-  set fastd.fastd.fastd.mesh_vpn.method='salsa2012+umac'
+  set fastd.fastd.mesh_vpn.syslog_level='warn'
+  set fastd.fastd.mesh_vpn.method='salsa2012+umac'
   set fastd.fastd.mesh_vpn.mode='tap'
   set fastd.fastd.mesh_vpn.interface="mesh-vpn"
   set fastd.fastd.mesh_vpn.mtu='1426'
