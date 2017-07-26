@@ -11,7 +11,7 @@ uci batch <<EOF
   set fastd.mesh_vpn.mode='tap'
   set fastd.mesh_vpn.interface="mesh-vpn"
   set fastd.mesh_vpn.mtu='1426'
-  set fastd.mesh_vpn.on_up="/etc/fastd/mesh_vpn/up.sh"
+  set fastd.mesh_vpn.on_pre-up="/etc/fastd/mesh_vpn/up.sh"
   set fastd.mesh_vpn.secure_handshakes='0'
   set fastd.mesh_vpn.secret="generate"
   set fastd.mesh_vpn.pubkey=""
