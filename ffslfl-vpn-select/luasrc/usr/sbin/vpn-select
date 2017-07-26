@@ -122,6 +122,7 @@ function make_config()
         })
 
         uci:commit('tunneldigger')
+        fs.remove("/etc/fastd/mesh_vpn/peers/")
     end
 end
 
@@ -159,6 +160,6 @@ else
         uci:save('fastd')
     end
     make_config()
-    io.popen('/etc/init.d/fastd restart')
-    io.popen('/etc/init.d/tunneldigger restart')
+    io.popen('/etc/init.d/fastd start')
+    io.popen('/etc/init.d/tunneldigger start')
 end
