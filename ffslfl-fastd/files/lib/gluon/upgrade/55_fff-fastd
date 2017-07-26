@@ -3,20 +3,21 @@
 >/etc/config/fastd
 
 uci batch <<EOF
-  set fastd.fastd.mesh_vpn='fastd'
-  set fastd.fastd.mesh_vpn.enabled='1'
-  set fastd.fastd.mesh_vpn.config_peer_dir="/etc/fastd/mesh_vpn/peers"
-  set fastd.fastd.mesh_vpn.syslog_level='warn'
-  set fastd.fastd.mesh_vpn.method='salsa2012+umac'
-  set fastd.fastd.mesh_vpn.mode='tap'
-  set fastd.fastd.mesh_vpn.interface="mesh-vpn"
-  set fastd.fastd.mesh_vpn.mtu='1426'
-  set fastd.fastd.mesh_vpn.on_up="/etc/fastd/mesh_vpn/up.sh"
-  set fastd.fastd.mesh_vpn.secure_handshakes='0'
-  set fastd.fastd.mesh_vpn.secret="generate"
-  set fastd.fastd.mesh_vpn.pubkey=""
-  set fastd.fastd.mesh_vpn.status_socket="/var/run/fastd.mesh_vpn.socket"
+  set fastd.mesh_vpn=fastd
+  set fastd.mesh_vpn.enabled='1'
+  set fastd.mesh_vpn.config_peer_dir="/etc/fastd/mesh_vpn/peers"
+  set fastd.mesh_vpn.syslog_level='warn'
+  set fastd.mesh_vpn.method='salsa2012+umac'
+  set fastd.mesh_vpn.mode='tap'
+  set fastd.mesh_vpn.interface="mesh-vpn"
+  set fastd.mesh_vpn.mtu='1426'
+  set fastd.mesh_vpn.on_up="/etc/fastd/mesh_vpn/up.sh"
+  set fastd.mesh_vpn.secure_handshakes='0'
+  set fastd.mesh_vpn.secret="generate"
+  set fastd.mesh_vpn.pubkey=""
+  set fastd.mesh_vpn.status_socket="/var/run/fastd.mesh_vpn.socket"
 EOF
+uci commit fastd
 
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
 ln -s /tmp/fastd_ffslfl_peers /etc/fastd/mesh_vpn/peers
