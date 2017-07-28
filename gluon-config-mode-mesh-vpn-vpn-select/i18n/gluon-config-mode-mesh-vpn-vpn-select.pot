@@ -10,7 +10,7 @@ msgstr ""
 msgid "Upstream (kbit/s)"
 msgstr ""
 
-msgid "Use internet connection (mesh VPN)"
+msgid "Select VPN Type to use for internet connection (mesh VPN)"
 msgstr ""
 
 msgid ""
