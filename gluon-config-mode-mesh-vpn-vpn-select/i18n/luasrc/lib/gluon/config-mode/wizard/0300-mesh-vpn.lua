@@ -1,13 +1,6 @@
 local fs = require "nixio.fs"
 
-local has_fastd = fs.access('/lib/gluon/mesh-vpn/fastd')
-local has_tunneldigger = fs.access('/lib/gluon/mesh-vpn/tunneldigger')
-
 return function(form, uci)
-	if not (has_fastd or has_tunneldigger) then
-		return
-	end
-
 	local msg = translate(
 		'Your internet connection can be used to establish a ' ..
 	        'VPN connection with other nodes. ' ..
@@ -21,15 +14,26 @@ return function(form, uci)
 
 	local o
 
-	local meshvpn = s:option(Flag, "meshvpn", translate("Use internet connection (mesh VPN)"))
-	meshvpn.default = uci:get_bool("fastd", "mesh_vpn", "enabled") or uci:get_bool("tunneldigger", "mesh_vpn", "enabled")
+	local meshvpn = s:option(ListValue, "meshvpn", translate("Select VPN Type to use for internet connection (mesh VPN)"))
+	meshvpn.default = "Tunneldigger - L2TP (faster but unencrypted)"
+	meshvpn:value("Tunneldigger (faster but unencrypted)")
+	meshvpn:value("Fastd (slower but encrypted)")
+	meshvpn:value("Disable")
 	function meshvpn:write(data)
-		if has_fastd then
-			uci:set("fastd", "mesh_vpn", "enabled", data)
+		if data == "Fastd (slower but encrypted)" then
+			uci:set("fastd", "mesh_vpn", "enabled", "1")
+			uci:set("tunneldigger", "mesh_vpn", "enabled", "0")
 		end
-		if has_tunneldigger then
-			uci:set("tunneldigger", "mesh_vpn", "enabled", data)
+		if data == "Tunneldigger - L2TP (faster but unencrypted)" then
+			uci:set("fastd", "mesh_vpn", "enabled", "0")
+			uci:set("tunneldigger", "mesh_vpn", "enabled", "1")
 		end
+		if data == "Disable" then
+			uci:set("fastd", "mesh_vpn", "enabled", "0")
+			uci:set("tunneldigger", "mesh_vpn", "enabled", "0")
+		end
+		uci:commit("fastd")
+		uci:commit("tunneldigger")
 	end
 
 	local limit = s:option(Flag, "limit_enabled", translate("Limit bandwidth"))
