@@ -20,3 +20,12 @@ msgid ""
 "bandwidth available for the network. You can limit how much bandwidth the "
 "node will use at most."
 msgstr ""
+
+msgid "Tunneldigger - L2TP (faster but unencrypted)"
+msgstr ""
+
+msgid "Fastd (slower but encrypted)"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
