@@ -19,7 +19,6 @@ uci batch <<EOF
 EOF
 
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
-ln -s /tmp/fastd_ffslfl_peers /etc/fastd/mesh_vpn/peers
 echo "#!/bin/sh" > /etc/fastd/mesh_vpn/up.sh
 echo "ip link set up dev mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
 echo "batctl if add mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
