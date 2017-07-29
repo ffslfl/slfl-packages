@@ -136,9 +136,13 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
     io.popen('/etc/init.d/fastd reload')
 
     if isdir('/etc/fastd/mesh_vpn/peers/') then
-        io.popen('/etc/init.d/fastd restart')
+        if io.popen('netstat -tulpn | grep fastd'):read('*all') == nil then
+            io.popen('/etc/init.d/fastd start')
+        end
     else
-        io.popen('/etc/init.d/fastd stop')
+        if io.popen('netstat -tulpn | grep fastd'):read('*all') ~= nil then
+            io.popen('/etc/init.d/fastd stop')
+        end
     end
 else
     fs.mkdir('/tmp/fastd_mesh_vpn_peers')
