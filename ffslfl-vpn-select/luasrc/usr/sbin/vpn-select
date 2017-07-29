@@ -136,13 +136,9 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
     io.popen('/etc/init.d/fastd reload')
 
     if isdir('/etc/fastd/mesh_vpn/peers/') then
-        if not exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'):read('*all'))) then
-            io.popen('/etc/init.d/fastd start')
-        end
+        io.popen('/etc/init.d/fastd restart')
     else
-        if exists(string.format('/proc/%s', io.popen('cat /tmp/run/fastd.mesh_vpn.pid'):read('*all'))) then
-            io.popen('/etc/init.d/fastd stop')
-        end
+        io.popen('/etc/init.d/fastd stop')
     end
 else
     fs.mkdir('/tmp/fastd_mesh_vpn_peers')
