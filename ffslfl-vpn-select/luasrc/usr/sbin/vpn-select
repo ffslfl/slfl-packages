@@ -134,13 +134,22 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
         io.popen('/etc/init.d/tunneldigger restart')
     end
     io.popen('/etc/init.d/fastd reload')
-
+    
+    local fastd_running_status_raw = io.popen('netstat -tulpn | grep fastd'):read('*all')
+    local fastd_running_statusTable = split(fastd_running_status, "\n")
+    local fastd_running_status = ''
+    if fastd_running_statusTable[0] ~= nil then
+        fastd_running_status = fastd_running_statusTable[0]
+    else
+        fastd_running_status = fastd_running_statusTable[1]
+    end
+    
     if isdir('/etc/fastd/mesh_vpn/peers/') then
-        if io.popen('netstat -tulpn | grep fastd'):read('*all') == nil then
+        if fastd_running_status == nil then
             io.popen('/etc/init.d/fastd start')
         end
     else
-        if io.popen('netstat -tulpn | grep fastd'):read('*all') ~= nil then
+        if fastd_running_status ~= nil then
             io.popen('/etc/init.d/fastd stop')
         end
     end
