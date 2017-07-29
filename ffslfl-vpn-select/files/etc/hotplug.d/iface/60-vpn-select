@@ -1,5 +1,6 @@
 #!/bin/sh
-[ "$ACTION" = "ifup" -a "$INTERFACE" = "br-wan" ] && {
-       sleep 3
-       /usr/sbin/vpn-select
-}
+if [ "$ACTION" = "ifup" ] && [ "$INTERFACE" = "br-wan" ]
+then
+    sleep 3
+    /usr/sbin/vpn-select
+fi
