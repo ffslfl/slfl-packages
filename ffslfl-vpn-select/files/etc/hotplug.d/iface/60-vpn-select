@@ -1,6 +1,0 @@
-#!/bin/sh
-if [ "$ACTION" = "ifup" ] && [ "$INTERFACE" = "br-wan" ]
-then
-    sleep 3
-    /usr/sbin/vpn-select
-fi
