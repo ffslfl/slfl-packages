@@ -11,7 +11,6 @@ uci batch <<EOF
   set fastd.mesh_vpn.mode='tap'
   set fastd.mesh_vpn.interface="mesh-vpn"
   set fastd.mesh_vpn.mtu='1426'
-  set fastd.mesh_vpn.on_pre_up="/etc/fastd/mesh_vpn/up.sh"
   set fastd.mesh_vpn.secure_handshakes='0'
   set fastd.mesh_vpn.secret="generate"
   set fastd.mesh_vpn.pubkey=""
@@ -19,7 +18,3 @@ uci batch <<EOF
 EOF
 
 [ ! -d /etc/fastd/mesh_vpn ] &&  mkdir -p /etc/fastd/mesh_vpn
-echo "#!/bin/sh" > /etc/fastd/mesh_vpn/up.sh
-echo "ip link set up dev mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
-echo "batctl if add mesh-vpn" >> /etc/fastd/mesh_vpn/up.sh
-chmod +x /etc/fastd/mesh_vpn/up.sh
