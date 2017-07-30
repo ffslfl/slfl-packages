@@ -83,14 +83,6 @@ function make_config()
     end
 
     local enabled = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
-    if enabled == nil then
-        if uci:get_first('tunneldigger', 'broker', 'interface') == "mesh-vpn" then
-            enabled = uci:get_first('tunneldigger', 'broker', 'enabled')
-        end
-    end
-    if enabled == nil then
-        enabled = site.mesh_vpn.enabled or false
-    end
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
     
