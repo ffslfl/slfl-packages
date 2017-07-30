@@ -145,7 +145,7 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
     end
     
     if isdir('/etc/fastd/mesh_vpn/peers/') then
-        if fastd_running_status == nil then
+        if (fastd_running_status == nil or fastd_running_status == "" or fastd_running_status == "netstat: showing only processes with your user ID") then
             io.popen('/etc/init.d/fastd start')
         end
     else
