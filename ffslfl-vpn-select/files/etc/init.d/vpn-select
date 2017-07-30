@@ -1,5 +1,5 @@
 #!/bin/sh /etc/rc.common
-START=400
+START=16
 STOP=12
 # The command(s) you want to run on start
 start() {        
