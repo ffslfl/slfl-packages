@@ -8,5 +8,5 @@ start() {
 }
 # The command(s) you want to run on stop
 stop() {          
-        #Nothing to do
+        echo Nothing to do
 }
