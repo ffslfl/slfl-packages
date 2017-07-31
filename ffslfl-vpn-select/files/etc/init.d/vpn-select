@@ -1,9 +1,9 @@
 #!/bin/sh /etc/rc.common
-START=61
+START=100
 STOP=12
 # The command(s) you want to run on start
 start() {        
-    sleep 30
+    sleep 60
     /usr/sbin/vpn-select
 }
 # The command(s) you want to run on stop
