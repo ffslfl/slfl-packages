@@ -3,7 +3,10 @@
 local site = require 'gluon.site_config'
 local util = require 'gluon.util'
 local fs = require 'nixio.fs'
+local nixio_system = require 'nixio'
 local uci = require('simple-uci').cursor()
+
+nixio_system.setgid("gluon-mesh-vpn")
 
 --- Check if a file or directory exists in this path
 function exists(file)
