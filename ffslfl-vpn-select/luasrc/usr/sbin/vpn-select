@@ -100,7 +100,7 @@ function make_config()
     
     local l2port = fdport + 10000
 
-    if (enabledGW ~= "0" and enabled ~= "0") then
+    if (enabledGW ~= "0" and enabled ~= "0" and enabled ~= nil) then
         --- uci:delete is unreliable :(
         io.popen('rm /etc/config/tunneldigger && touch /etc/config/tunneldigger'):read('*all')
         uci:set("fastd", "mesh_vpn", "enabled", "0")
