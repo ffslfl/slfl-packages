@@ -1,0 +1,4 @@
+#!/bin/bash
+rm /etc/config/tunneldigger
+touch  /etc/config/tunneldigger
+rm /lib/gluon/upgrade/410-vpn-select.sh && reboot
