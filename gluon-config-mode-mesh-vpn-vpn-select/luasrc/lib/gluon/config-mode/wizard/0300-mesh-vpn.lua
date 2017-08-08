@@ -15,7 +15,11 @@ return function(form, uci)
 	local o
 
 	local meshvpn = s:option(ListValue, "meshvpn", translate("Select VPN Type to use for internet connection (mesh VPN)"))
-	meshvpn.default = translate("Fastd (slower but encrypted)")
+	if uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get_bool("tunneldigger", "mesh_vpn", "enabled") == "1" then
+		meshvpn.default = translate("Tunneldigger - L2TP (faster but unencrypted)")
+	else
+		meshvpn.default = translate("Fastd (slower but encrypted)")
+	end
 	meshvpn:value(translate("Tunneldigger - L2TP (faster but unencrypted)"))
 	meshvpn:value(translate("Fastd (slower but encrypted)"))
 	meshvpn:value(translate("Disable"))
