@@ -1,4 +1,25 @@
 #!/bin/bash
+TUNNELDIGGERENABLED=$(uci get tunneldigger.0.enabled)
+if [ $TUNNELDIGGERENABLED -eq "" ]
+then
+     TUNNELDIGGERENABLED=$(uci get tunneldigger.mesh_vpn.enabled)
+fi
+if [ $TUNNELDIGGERENABLED -eq "" ]
+then
+     FASTDENABLED="1"
+     TUNNELDIGGERENABLED="0"
+else
+     if [ $TUNNELDIGGERENABLED -eq "1" ]
+     then
+         FASTDENABLED="0"
+     else
+         FASTDENABLED="1"
+     fi
+fi
 rm /etc/config/tunneldigger
 touch  /etc/config/tunneldigger
+uci set fastd.mesh_vpn.enabled=$FASTDENABLED
+uci set tunneldigger.mesh_vpn=broker
+uci set tunneldigger.mesh_vpn=broker
+uci set tunneldigger.mesh_vpn.enabled=$TUNNELDIGGERENABLED
 rm /lib/gluon/upgrade/410-vpn-select.sh && reboot
