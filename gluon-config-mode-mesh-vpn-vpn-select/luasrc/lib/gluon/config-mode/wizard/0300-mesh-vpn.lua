@@ -1,4 +1,5 @@
 local fs = require "nixio.fs"
+local simpleUci = require("simple-uci").cursor()
 
 return function(form, uci)
 	local msg = translate(
@@ -15,29 +16,37 @@ return function(form, uci)
 	local o
 
 	local meshvpn = s:option(ListValue, "meshvpn", translate("Select VPN Type to use for internet connection (mesh VPN)"))
+	
+	meshvpn:value("tunneldigger", translate("Tunneldigger - L2TP (faster but unencrypted)"))
+	meshvpn:value("fastd", translate("Fastd (slower but encrypted)"))
+	meshvpn:value("disabled", translate("Disable"))
+	
 	if uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get_bool("tunneldigger", "mesh_vpn", "enabled") == "1" then
-		meshvpn.default = translate("Tunneldigger - L2TP (faster but unencrypted)")
+		meshvpn.default = "tunneldigger"
 	else
-		meshvpn.default = translate("Fastd (slower but encrypted)")
+		meshvpn.default = "fastd"
 	end
-	meshvpn:value(translate("Tunneldigger - L2TP (faster but unencrypted)"))
-	meshvpn:value(translate("Fastd (slower but encrypted)"))
-	meshvpn:value(translate("Disable"))
+
 	function meshvpn:write(data)
-		if data == translate("Fastd (slower but encrypted)") then
+		if data == "fastd" then
 			uci:set("fastd", "mesh_vpn", "enabled", "1")
-			uci:set("tunneldigger", "mesh_vpn", "enabled", "0")
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
+                             enabled = "0",
+                        })
 		end
-		if data == translate("Tunneldigger - L2TP (faster but unencrypted)") then
+		if data == "tunneldigger" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			uci:set("tunneldigger", "mesh_vpn", "enabled", "1")
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
+                             enabled = "1",
+                        })
 		end
-		if data == translate("Disable") then
+		if data == "disabled" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			uci:set("tunneldigger", "mesh_vpn", "enabled", "0")
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
+                             enabled = "0",
+                        })
 		end
-		uci:commit("fastd")
-		uci:commit("tunneldigger")
+		simpleUci:commit('tunneldigger')
 	end
 
 	local limit = s:option(Flag, "limit_enabled", translate("Limit bandwidth"))
