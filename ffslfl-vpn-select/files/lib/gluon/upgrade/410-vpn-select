@@ -12,8 +12,10 @@ else
      if [ $TUNNELDIGGERENABLED -eq "1" ]
      then
          FASTDENABLED="0"
+         TUNNELDIGGERENABLED="1"
      else
          FASTDENABLED="1"
+         TUNNELDIGGERENABLED="0"
      fi
 fi
 rm /etc/config/tunneldigger
