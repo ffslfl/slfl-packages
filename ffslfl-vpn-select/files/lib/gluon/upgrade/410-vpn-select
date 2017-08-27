@@ -23,4 +23,5 @@ uci set tunneldigger.mesh_vpn=broker
 uci set tunneldigger.mesh_vpn=broker
 uci set tunneldigger.mesh_vpn.enabled=$TUNNELDIGGERENABLED
 uci commit tunneldigger
+rm -Rf /etc/fastd/mesh_vpn/peers/*
 rm /lib/gluon/upgrade/410-vpn-select.sh && reboot
