@@ -16,10 +16,12 @@ local msg
 
 
 if uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get_bool("tunneldigger", "mesh_vpn", "enabled") == "1" then
-	msg = _translate('gluon-config-mode:novpn')
+	msg = _translate('gluon-config-mode:tunneldigger')
 elseif uci:get_bool("fastd", "mesh_vpn", "enabled") or uci:get_bool("fastd", "mesh_vpn", "enabled") == "1" then
 	pubkey = util.trim(lutil.exec("/etc/init.d/fastd show_key mesh_vpn"))
 	msg = _translate('gluon-config-mode:pubkey')
+else
+	msg = _translate('gluon-config-mode:novpn')
 end
 
 if not msg then return end
