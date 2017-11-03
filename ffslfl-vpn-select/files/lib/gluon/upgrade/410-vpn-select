@@ -1,15 +1,15 @@
 #!/bin/bash
 TUNNELDIGGERENABLED=$(uci get tunneldigger.0.enabled)
-if [ $TUNNELDIGGERENABLED -eq "" ]
+if [ "${TUNNELDIGGERENABLED}" -eq "" ]
 then
      TUNNELDIGGERENABLED=$(uci get tunneldigger.mesh_vpn.enabled)
 fi
-if [ $TUNNELDIGGERENABLED -eq "" ]
+if [ "${TUNNELDIGGERENABLED}" -eq "" ]
 then
      FASTDENABLED="1"
      TUNNELDIGGERENABLED="0"
 else
-     if [ $TUNNELDIGGERENABLED -eq "1" ]
+     if [ "${TUNNELDIGGERENABLED}" -eq "1" ]
      then
          FASTDENABLED="0"
          TUNNELDIGGERENABLED="1"
