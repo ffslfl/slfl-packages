@@ -28,6 +28,7 @@ TARGET_CFLAGS += \
 define Build/Prepare
 	$(call Build/Prepare/Default)
 	mv $(PKG_BUILD_DIR)/client/* $(PKG_BUILD_DIR)
+	sed -i s/-lnl/-lnl-tiny/g $(PKG_BUILD_DIR)/Makefile
 endef
 
 define Package/tunneldigger/install
