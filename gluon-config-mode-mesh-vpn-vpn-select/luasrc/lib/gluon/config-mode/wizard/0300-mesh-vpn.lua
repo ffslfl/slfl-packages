@@ -16,6 +16,7 @@ return function(form, uci)
 	local o
 
 	local meshvpn = s:option(ListValue, "meshvpn", translate("Select VPN Type to use for internet connection (mesh VPN)"))
+	local meshvpn_activated
 	
 	meshvpn:value("tunneldigger", translate("Tunneldigger - L2TP (faster but unencrypted)"))
 	meshvpn:value("fastd", translate("Fastd (slower but encrypted)"))
@@ -33,24 +34,27 @@ return function(form, uci)
 			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "0",
                         })
+			meshvpn_activated = true
 		end
 		if data == "tunneldigger" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
 			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "1",
                         })
+			meshvpn_activated = true
 		end
 		if data == "disabled" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
 			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "0",
                         })
+			meshvpn_activated = false
 		end
 		simpleUci:commit('tunneldigger')
 	end
 
 	local limit = s:option(Flag, "limit_enabled", translate("Limit bandwidth"))
-	limit:depends(meshvpn, true)
+	limit:depends(meshvpn_activated, true)
 	limit.default = uci:get_bool("simple-tc", "mesh_vpn", "enabled")
 	function limit:write(data)
 		uci:set("simple-tc", "mesh_vpn", "interface")
