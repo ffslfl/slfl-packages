@@ -1,29 +1,54 @@
 #!/bin/sh
-TUNNELDIGGERENABLED=$(uci get tunneldigger.0.enabled)
-if [ "${TUNNELDIGGERENABLED}" -eq "" ]
+
+# Get Current Tunneldigger value from the old format (version 0.3.0 and previous)
+TUNNELDIGGERENABLED=$(uci -q get tunneldigger.0.enabled)
+
+# Check if response is empty
+if [ -z "${TUNNELDIGGERENABLED}" ]
 then
-     TUNNELDIGGERENABLED=$(uci get tunneldigger.mesh_vpn.enabled)
+    # Get value from new key if we got one
+    TUNNELDIGGERENABLED=$(uci -q get tunneldigger.mesh_vpn.enabled)
 fi
-if [ "${TUNNELDIGGERENABLED}" -eq "" ]
+
+# Check if we still got no value
+if [ -z "${TUNNELDIGGERENABLED}" ]
 then
+     # Fallback to fastd as default
      FASTDENABLED="1"
      TUNNELDIGGERENABLED="0"
 else
+
+     # Check if Tunneldigger is or was enabled
      if [ "${TUNNELDIGGERENABLED}" -eq "1" ]
      then
+         # Prepare Tunneldigger to be enabled and Fastd disabled
          FASTDENABLED="0"
          TUNNELDIGGERENABLED="1"
      else
+         # Prepare Fastd to be enabled and Tunneldigger disabled
          FASTDENABLED="1"
          TUNNELDIGGERENABLED="0"
      fi
 fi
+
+# Remove old Tunneldigger Config and recreate it as empty file
 rm /etc/config/tunneldigger
 touch  /etc/config/tunneldigger
-uci set fastd.mesh_vpn.enabled=$FASTDENABLED
+
+# Set Fastd enabled/disabled
+uci set fastd.mesh_vpn.enabled="${FASTDENABLED}"
+
+# Add mesh_vpn interface as tunneldigger broker
 uci set tunneldigger.mesh_vpn=broker
-uci set tunneldigger.mesh_vpn=broker
-uci set tunneldigger.mesh_vpn.enabled=$TUNNELDIGGERENABLED
+# Set Tunneldigger enabled/disabled
+uci set tunneldigger.mesh_vpn.enabled="${TUNNELDIGGERENABLED}"
+
+# Save values to file
 uci commit tunneldigger
+uci commit fastd
+
+# Remove any old fastd peers
 rm -Rf /etc/fastd/mesh_vpn/peers/*
-rm /lib/gluon/upgrade/410-vpn-select && reboot
+
+# Remove this script and reboot to 1. never rerun this script (prevent bootloop) and 2. Apply any changes to the system
+rm /lib/gluon/upgrade/410-vpn-select.sh && reboot
