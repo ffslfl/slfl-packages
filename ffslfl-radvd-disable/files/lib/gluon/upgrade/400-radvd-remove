@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Check if file exists
+if [ -x /lib/gluon/radvd/arguments ]
+then
+    rm /lib/gluon/radvd/arguments
+fi
+
+# Remove this script and reboot to 1. never rerun this script (prevent bootloop) and 2. Apply any changes to the system
+rm /lib/gluon/upgrade/400-radvd-remove.sh && reboot
