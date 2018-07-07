@@ -50,5 +50,5 @@ uci commit fastd
 # Remove any old fastd peers
 rm -Rf /etc/fastd/mesh_vpn/peers/*
 
-# Remove this script and reboot to 1. never rerun this script (prevent bootloop) and 2. Apply any changes to the system
-rm /lib/gluon/upgrade/410-vpn-select.sh && reboot
+# Apply any changes to the system using reboot
+reboot
