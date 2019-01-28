@@ -1,14 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffslfl-legacy-upgrade
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=1
-
-PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
 include $(TOPDIR)/../package/gluon.mk
 
-define Package/ffslfl-legacy-upgrade
+define Package/$(PKG_NAME)
 	SECTION:=base
 	CATEGORY:=Freifunk
 	TITLE:= Freifunk-Schleswig-Flensburg legacy-upgrade
@@ -16,22 +14,8 @@ define Package/ffslfl-legacy-upgrade
 	DEPENDS:= +gluon-core
 endef
 
-define Package/ffslfl-legacy-upgrade/description
+define Package/$(PKG_NAME)/description
 	Supposed to upgrade the 0.3.0 config to the newer config format
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-endef
-
-define Package/ffslfl-legacy-upgrade/install
-	$(CP) ./files/* $(1)/
-endef
-
-$(eval $(call BuildPackage,ffslfl-legacy-upgrade))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
