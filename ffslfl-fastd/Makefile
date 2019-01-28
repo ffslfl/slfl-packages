@@ -1,13 +1,13 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffslfl-fastd
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=2
 PKG_BUILD_DEPENDS := respondd
 
-include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/../package/gluon.mk
 
-define Package/ffslfl-fastd
+define Package/$(PKG_NAME)
     SECTION:=base
     CATEGORY:=Freifunk
     TITLE:=Freifunk-Schleswig-Flensburg fastd configuration script
@@ -23,25 +23,10 @@ define Package/ffslfl-fastd
 	     +gluon-core
 endef
 
-define Package/ffslfl-fastd/description
+define Package/$(PKG_NAME)/description
     This is the fastd for the Freifunk Schleswig-Flensburg Firmware
     It is used to configure fastd.
 		It is based on the version from Freifunk Franken
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-	$(CP) ./src/* $(PKG_BUILD_DIR)/
-endef
-
-define Build/Compile
-	$(call Build/Compile/Default)
-endef
-
-define Package/ffslfl-fastd/install
-	$(CP) ./files/* $(1)/
-	$(INSTALL_DIR) $(1)/lib/gluon/respondd
-	$(CP) $(PKG_BUILD_DIR)/respondd.so $(1)/lib/gluon/respondd/mesh-vpn-fastd.so
-endef
-
-$(eval $(call BuildPackage,ffslfl-fastd))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
