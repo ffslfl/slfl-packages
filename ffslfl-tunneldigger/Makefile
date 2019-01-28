@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffslfl-tunneldigger
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=1
 
-include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/../package/gluon.mk
 
-define Package/ffslfl-tunneldigger
+define Package/$(PKG_NAME)
     SECTION:=base
     CATEGORY:=Freifunk
     TITLE:= Freifunk-Schleswig-Flensburg tunneldigger
@@ -14,21 +14,9 @@ define Package/ffslfl-tunneldigger
     DEPENDS:=+tunneldigger
 endef
 
-define Package/ffslfl-tunneldigger/description
+define Package/$(PKG_NAME)/description
     This is tunneldigger for the Freifunk Schleswig-Flensburg Firmware.
 		It is based on the version made by Freifunk Franken
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Package/ffslfl-tunneldigger/install
-        $(CP) ./files/* $(1)/
-endef
-
-define Build/Compile
-			#Nothing to do
-endef
-
-$(eval $(call BuildPackage,ffslfl-tunneldigger))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
