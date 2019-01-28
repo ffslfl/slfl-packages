@@ -1,12 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fff-random
-PKG_VERSION:=0.0.1
-PKG_RELEASE:=1
+PKG_VERSION:=0.0.2
+PKG_RELEASE:=2
 
-include $(INCLUDE_DIR)/package.mk
+include $(TOPDIR)/../package/gluon.mk
 
-define Package/fff-random
+define Package/$(PKG_NAME)
     SECTION:=base
     CATEGORY:=Freifunk
     TITLE:=Freifunk-Franken Random
@@ -14,21 +14,9 @@ define Package/fff-random
     DEPENDS:=+@BUSYBOX_CONFIG_ASH
 endef
 
-define Package/fff-random/description
+define Package/$(PKG_NAME)/description
     This is the Freifunk Franken Firmware Random package
     This packages provides a random function.
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Package/fff-random/install
-	$(CP) ./files/* $(1)/
-endef
-
-define Build/Compile
-	#Nothing to do
-endef
-
-$(eval $(call BuildPackage,fff-random))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
