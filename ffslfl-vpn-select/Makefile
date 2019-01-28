@@ -1,14 +1,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=ffslfl-vpn-select
-PKG_VERSION:=1
+PKG_VERSION:=2
 PKG_RELEASE:=1
-
-PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
 include $(TOPDIR)/../package/gluon.mk
 
-define Package/ffslfl-vpn-select
+define Package/$(PKG_NAME)
 	SECTION:=base
 	CATEGORY:=Freifunk
 	TITLE:= Freifunk-Schleswig-Flensburg vpn-select
@@ -20,26 +18,10 @@ define Package/ffslfl-vpn-select
 		+gluon-mesh-vpn-core
 endef
 
-define Package/ffslfl-vpn-select/description
+define Package/$(PKG_NAME)/description
 	This package selects and starts the VPN
 	In this version fastd and l2tp via tunneldigger.
 	It is based on the version from Freifunk Franken
 endef
 
-define Build/Prepare
-	mkdir -p $(PKG_BUILD_DIR)
-endef
-
-define Build/Configure
-endef
-
-define Build/Compile
-	$(call GluonSrcDiet,./luasrc,$(PKG_BUILD_DIR)/luadest/)
-endef
-
-define Package/ffslfl-vpn-select/install
-	$(CP) ./files/* $(1)/
-	$(CP) $(PKG_BUILD_DIR)/luadest/* $(1)/
-endef
-
-$(eval $(call BuildPackage,ffslfl-vpn-select))
+$(eval $(call BuildPackageGluon,$(PKG_NAME)))
