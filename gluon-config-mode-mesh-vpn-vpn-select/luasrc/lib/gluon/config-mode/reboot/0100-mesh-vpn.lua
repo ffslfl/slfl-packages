@@ -1,6 +1,5 @@
 local uci = require("simple-uci").cursor()
 local lutil = require "gluon.web.util"
-local fs = require "nixio.fs"
 
 local site = require 'gluon.site_config'
 local sysconfig = require 'gluon.sysconfig'

@@ -1,4 +1,3 @@
-local fs = require "nixio.fs"
 local simpleUci = require("simple-uci").cursor()
 
 return function(form, uci)
