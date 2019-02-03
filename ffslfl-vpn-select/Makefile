@@ -15,7 +15,8 @@ define Package/$(PKG_NAME)
 		+ffslfl-tunneldigger \
 		+ffslfl-fastd \
 		+gluon-core \
-		+gluon-mesh-vpn-core
+		+gluon-mesh-vpn-core \
+		+libgluonutil
 endef
 
 define Package/$(PKG_NAME)/description
