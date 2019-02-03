@@ -2,11 +2,10 @@
 
 local site = require 'gluon.site_config'
 local util = require 'gluon.util'
-local fs = require 'nixio.fs'
-local nixio_system = require 'nixio'
+local posix = require 'posix'
 local uci = require('simple-uci').cursor()
 
-nixio_system.setgid("gluon-mesh-vpn")
+posix.setgid("gluon-mesh-vpn")
 
 --- Check if a file or directory exists in this path
 function exists(file)
@@ -41,9 +40,9 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
     family = 'ipv4',
 })
 
-local mac_raw = util.trim(fs.readfile('/sys/class/net/br-wan/address'))
+local mac_raw = util.trim(util.readfile('/sys/class/net/br-wan/address'))
 local mac = string.upper(string.gsub(mac_raw, ":", ""))
-local hostname = util.trim(fs.readfile('/proc/sys/kernel/hostname'))
+local hostname = util.trim(util.readfile('/proc/sys/kernel/hostname'))
 local port = ''
 local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
 local lat = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'latitude') or ""
@@ -62,10 +61,13 @@ function make_config()
     end
     
     -- Cleanup tmp dir
-    fs.remove("/tmp/fastd_mesh_vpn_peers/")
-    fs.remove("/etc/fastd/mesh_vpn/peers/")
-    fs.mkdirr("/tmp/fastd_mesh_vpn_peers/")
-    fs.mkdirr("/etc/fastd/mesh_vpn/peers/")
+    os.remove("/tmp/fastd_mesh_vpn_peers/")
+    os.remove("/etc/fastd/mesh_vpn/peers/")
+    posix.mkdir("/tmp/")
+    posix.mkdir("/tmp/fastd_mesh_vpn_peers/")
+    posix.mkdir("/etc/fastd/")
+    posix.mkdir("/etc/fastd/mesh_vpn/")
+    posix.mkdir("/etc/fastd/mesh_vpn/peers/")
 
     local files = io.popen("wget -4 -T15 'http://keyserver.ffslfl.net/index.php?mac=" .. mac .. "&name=" .. hostname .. "&port=" .. port .. "&key=" .. pubkey.. "&lat=" .. lat .. "&long=" .. long.. "' -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\"", 'r'):read('*all')
     local GWTable = split(files, "\n")
@@ -118,7 +120,7 @@ function make_config()
         })
 
         uci:commit('tunneldigger')
-        fs.remove("/etc/fastd/mesh_vpn/peers/")
+        os.remove("/etc/fastd/mesh_vpn/peers/")
     else
         uci:set("fastd", "mesh_vpn", "enabled", "1")
     end
@@ -152,7 +154,7 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
         end
     end
 else
-    fs.mkdir('/tmp/fastd_mesh_vpn_peers')
+    posix.mkdir('/tmp/fastd_mesh_vpn_peers')
     local secret = io.popen('egrep "option secret \'[0-9a-f]{64}\'" /etc/config/fastd'):read('*all')
     if (secret == nil or secret == "") then
         local secret_raw = io.popen("fastd --generate-key 2>&1 |  awk '/[Ss]ecret/ { print $2 }'"):read('*all')
