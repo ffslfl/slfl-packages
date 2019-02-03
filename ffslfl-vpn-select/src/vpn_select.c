@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <grp.h>
+#include <stdio.h>
 
 void moveToCorrectProcess() {
   struct group *grp;
