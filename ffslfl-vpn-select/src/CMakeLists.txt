@@ -19,4 +19,4 @@ target_link_libraries(vpn_select
         ${UCI_LIBRARY}
         )
 
-install(TARGETS vpn_select RUNTIME DESTINATION sbin)
+install(TARGETS vpn_select RUNTIME DESTINATION usr/sbin)
