@@ -4,19 +4,20 @@ project(VPN_SELECT C)
 
 set_property(DIRECTORY PROPERTY COMPILE_DEFINITIONS _GNU_SOURCE)
 
-#find_library(UCI_LIBRARY NAMES uci)
+find_library(UCI_LIBRARY NAMES uci)
 
 find_package(PkgConfig REQUIRED QUIET)
 
 add_executable(vpn_select
         vpn_select.c
         settings.c
+        util.c
         )
 
 set_property(TARGET vpn_select PROPERTY COMPILE_FLAGS "-std=c99 -Wall")
 
 target_link_libraries(vpn_select
-        #${UCI_LIBRARY}
+        ${UCI_LIBRARY}
         )
 
 install(TARGETS vpn_select RUNTIME DESTINATION usr/sbin)

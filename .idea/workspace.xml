@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated>
-      <config projectName="VPN_SELECT" targetName="vpn_select" />
-    </generated>
+    <generated />
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_FIND_DEBUG_MODE=ON" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="35772033-b013-4653-9311-1d2809866a2a" name="Default" comment="Change groupid of process on start">
+    <list default="true" id="35772033-b013-4653-9311-1d2809866a2a" name="Default" comment="Get fastd secret using UCI and add first basic features to vpn-select C">
+      <change afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/util.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffslfl-vpn-select/src/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c" beforeDir="false" afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h" beforeDir="false" afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c" beforeDir="false" afterPath="$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -25,7 +29,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FavoritesManager">
     <favorites_list name="slfl-packages" />
   </component>
@@ -34,17 +37,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/luasrc/usr/sbin/vpn-select">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="6" column="28" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="28" />
+            <state relative-caret-position="287">
+              <caret line="152" column="11" lean-forward="true" selection-start-line="152" selection-start-column="11" selection-end-line="152" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/Makefile">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="284">
+              <caret line="48" column="12" lean-forward="true" selection-start-line="48" selection-start-column="12" selection-end-line="48" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="322">
+              <caret line="20" column="2" selection-start-line="20" selection-start-column="2" selection-end-line="20" selection-end-column="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="92">
+              <caret line="4" column="123" selection-start-line="4" selection-start-column="123" selection-end-line="4" selection-end-column="123" />
             </state>
           </provider>
         </entry>
@@ -52,40 +73,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="138">
-              <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/files/lib/gluon/vpn-select/iptables.rules">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+            <state relative-caret-position="253">
+              <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -103,6 +92,7 @@
     <findStrings>
       <find>mac</find>
       <find>toupper</find>
+      <find>marcel</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -126,8 +116,12 @@
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/files/lib/gluon/vpn-select/iptables.rules" />
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/Makefile" />
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/luasrc/usr/sbin/vpn-select.lua" />
+        <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/util.c" />
+        <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/util.h" />
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h" />
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c" />
+        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c" />
       </list>
     </option>
@@ -155,6 +149,17 @@
             <path>
               <item name="VPN_SELECT" type="b2602c69:ProjectViewProjectNode" />
               <item name="slfl-packages" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="VPN_SELECT" type="b2602c69:ProjectViewProjectNode" />
+              <item name="slfl-packages" type="462c0819:PsiDirectoryNode" />
+              <item name="ffslfl-fastd" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="VPN_SELECT" type="b2602c69:ProjectViewProjectNode" />
+              <item name="slfl-packages" type="462c0819:PsiDirectoryNode" />
+              <item name="ffslfl-fastd" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="VPN_SELECT" type="b2602c69:ProjectViewProjectNode" />
@@ -197,7 +202,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.idesettings.quicklists" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -288,11 +293,6 @@
       <recursive>false</recursive>
       <method />
     </configuration>
-    <configuration name="vpn_select" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="VPN_SELECT" TARGET_NAME="vpn_select" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="VPN_SELECT" RUN_TARGET_NAME="vpn_select">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -307,7 +307,8 @@
       <workItem from="1495432118219" duration="202000" />
       <workItem from="1495437207590" duration="3394000" />
       <workItem from="1549194411179" duration="2322000" />
-      <workItem from="1549201144093" duration="1071000" />
+      <workItem from="1549201144093" duration="1124000" />
+      <workItem from="1549202458605" duration="5870000" />
     </task>
     <task id="LOCAL-00001" summary="Prepare lua Version">
       <created>1495441045515</created>
@@ -330,11 +331,25 @@
       <option name="project" value="LOCAL" />
       <updated>1549198665247</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add missing import">
+      <created>1549202394635</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1549202394635</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Get fastd secret using UCI and add first basic features to vpn-select C">
+      <created>1549209261406</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1549209261406</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6989000" />
+    <option name="totallyTimeSpent" value="12912000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -349,7 +364,7 @@
     <frame x="-8" y="-8" width="1296" height="1040" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25809062" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26213592" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -361,12 +376,12 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50242716" side_tool="true" weight="0.3291714" />
-      <window_info anchor="bottom" id="Conan" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.50323623" side_tool="true" weight="0.3291714" />
+      <window_info anchor="bottom" id="Conan" order="10" weight="0.3291714" />
       <window_info anchor="bottom" id="Serial Monitor" order="11" weight="0.3299435" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="bottom" id="Messages" order="13" weight="0.3291714" />
-      <window_info active="true" anchor="bottom" id="CMake" order="14" sideWeight="0.4975728" visible="true" weight="0.3291714" />
+      <window_info anchor="bottom" id="CMake" order="14" sideWeight="0.49676377" weight="0.3291714" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -381,7 +396,9 @@
     <MESSAGE value="Prepare lua Version" />
     <MESSAGE value="Install to correct dir" />
     <MESSAGE value="Change groupid of process on start" />
-    <option name="LAST_COMMIT_MESSAGE" value="Change groupid of process on start" />
+    <MESSAGE value="Add missing import" />
+    <MESSAGE value="Get fastd secret using UCI and add first basic features to vpn-select C" />
+    <option name="LAST_COMMIT_MESSAGE" value="Get fastd secret using UCI and add first basic features to vpn-select C" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/files/etc/hotplug.d/iface/50-vpn-select" />
@@ -397,10 +414,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/luasrc/usr/sbin/vpn-select.lua" />
-    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/luasrc/usr/sbin/vpn-select">
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/files/lib/gluon/vpn-select/iptables.rules">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="28" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="28" />
+        <state relative-caret-position="46">
+          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -411,34 +428,74 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c">
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/cmake-build-debug/CMakeFiles/clion-log.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/cmake-build-debug/CMakeFiles/CMakeOutput.log">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="3" column="27" selection-start-line="3" selection-start-column="27" selection-end-line="3" selection-end-column="27" />
+        <state relative-caret-position="445">
+          <caret line="190" selection-start-line="190" selection-end-line="190" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+        <state relative-caret-position="43">
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/files/lib/gluon/vpn-select/iptables.rules">
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/util.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="5" column="14" lean-forward="true" selection-start-line="5" selection-start-column="14" selection-end-line="5" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/util.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-fastd/src/respondd.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6383" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="92">
+          <caret line="4" column="123" selection-start-line="4" selection-start-column="123" selection-end-line="4" selection-end-column="123" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/settings.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="11" column="8" lean-forward="true" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/luasrc/usr/sbin/vpn-select">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="152" column="11" lean-forward="true" selection-start-line="152" selection-start-column="11" selection-end-line="152" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="48" column="12" lean-forward="true" selection-start-line="48" selection-start-column="12" selection-end-line="48" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ffslfl-vpn-select/src/vpn_select.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="322">
+          <caret line="20" column="2" selection-start-line="20" selection-start-column="2" selection-end-line="20" selection-end-column="2" />
         </state>
       </provider>
     </entry>
