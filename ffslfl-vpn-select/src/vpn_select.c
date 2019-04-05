@@ -3,8 +3,11 @@
 #include <grp.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <uci.h>
+#include <stdbool.h>
 
 #include "util.h"
+#include "settings.h"
 
 void moveToCorrectProcess() {
   struct group *grp;
@@ -34,11 +37,16 @@ void run() {
     mkdir("/tmp/fastd_mesh_vpn_peers", 0700);
     const char *secret = get_fastd_secret(ctx);
     if (!secret || !*secret) {
-
+      char buffer[100];
+      char *secret_raw = run_command(buffer, "fastd --generate-key 2>&1 |  awk '/[Ss]ecret/ { print $2 }'");
+      char *secret = deblank(secret_raw);
+      set_fastd_secret(&ctx, secret);
+      struct uci_package *p;
+      uci_commit(&ctx, &p, false);
     }
     make_config();
-    execl("/etc/init.d/fastd","start", NULL);
-    execl("/etc/init.d/tunneldigger","start", NULL);
+    execl("/etc/init.d/fastd", "start", NULL);
+    execl("/etc/init.d/tunneldigger", "start", NULL);
   }
 
   uci_free_context(ctx);
@@ -46,9 +54,9 @@ void run() {
 
 int main(int argc, char *argv[]) {
   int f = fork();
-  if(f < 0)
+  if (f < 0)
     perror("fork error:");
-  else if(f == 0) /* child */
+  else if (f == 0) /* child */
   {
     moveToCorrectProcess();
 
