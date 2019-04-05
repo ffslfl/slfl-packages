@@ -19,13 +19,23 @@ static const char *get_fastd_secret(struct uci_context *ctx) {
 }
 
 void set_fastd_secret(struct uci_context *ctx, const char *secret) {
-  // TODO construct pointer
   struct uci_ptr uci_ptr;
   memset(&uci_ptr, 0, sizeof(uci_ptr));
 
   uci_ptr.package = "fastd";
   uci_ptr.value = secret;
   uci_set(ctx, &uci_ptr);
+}
+
+static const char *get_fastd_pubkey(struct uci_context *ctx) {
+  struct uci_package *p;
+  if (!uci_load(ctx, "fastd", &p)) {
+    const char *pubkey = get_first_option(ctx, p, "fastd.mesh_vpn", "pubkey");
+    if (!pubkey || !*pubkey)
+      return NULL;
+
+    return pubkey;
+  }
 }
 
 static const char *

@@ -5,9 +5,26 @@
 #include <sys/stat.h>
 #include <uci.h>
 #include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "util.h"
 #include "settings.h"
+#include "uclient.h"
+
+#define MAX_LINE_LENGTH 512
+#define STRINGIFY(str) #str
+
+struct keyserver_config {
+    char *gw_name;
+    int port;
+};
+
+struct recv_keyserver_ctx {
+    struct keyserver_config k;
+    char buf[MAX_LINE_LENGTH + 1];
+    char *ptr;
+};
 
 void moveToCorrectProcess() {
   struct group *grp;
@@ -20,8 +37,137 @@ void moveToCorrectProcess() {
   setpgid(0, grp->gr_gid);
 }
 
-void make_config() {
+void parse_line(char *line, struct keyserver_config *k) {
+  /* TODO parse line to struct via regexp
+   * Name Regex:   (####)([a-zA-Z0-9.]+)
+   * PORT Regex:   ipv(4|6) "([0-9.]+)"
+   */
+}
 
+/** Receives data from uclient, chops it to lines and hands it to \ref parse_line */
+static void recv_keyserver_cb(struct uclient *cl) {
+  struct recv_keyserver_ctx *ctx = uclient_get_custom(cl);
+  char *newline;
+  int len;
+
+  while (true) {
+    if (ctx->ptr - ctx->buf == MAX_LINE_LENGTH) {
+      fputs("autoupdater: error: encountered manifest line exceeding limit of "
+            STRINGIFY(MAX_LINE_LENGTH)
+            " characters\n", stderr);
+      break;
+    }
+    len = uclient_read_account(cl, ctx->ptr, MAX_LINE_LENGTH - (ctx->ptr - ctx->buf));
+    if (len <= 0)
+      break;
+    ctx->ptr[len] = '\0';
+
+    char *line = ctx->buf;
+    while (true) {
+      newline = strchr(line, '\n');
+      if (newline == NULL)
+        break;
+      *newline = '\0';
+
+      parse_line(line, &ctx->k);
+      line = newline + 1;
+    }
+
+    // Move the beginning of the next line to the beginning of the
+    // buffer. We cannot use strcpy here because the memory areas
+    // might overlap!
+    int n = strlen(line);
+    memmove(ctx->buf, line, n);
+    ctx->ptr = ctx->buf + n;
+  }
+}
+
+void make_config(struct uci_context *ctx) {
+  const char *pubkey = get_fastd_pubkey(ctx);
+  if (strncmp(pubkey, "", sizeof(pubkey)) == 0) {
+    const char *secret = get_fastd_secret(ctx);
+    const char *part1 = "uci set fastd.mesh_vpn.pubkey=$(echo \"secret \\\\\"";
+    const char *part2 = "\\\\\";\" | fastd -c - --show-key --machine-readable) && uci commit fastd && uci get fastd.mesh_vpn.pubkey";
+
+    char *command;
+    command = malloc(
+        strlen(part1) + 1 + strlen(secret) + 1 +
+        strlen(part2)); /* make space for the new string (should check the return value ...) */
+    strcpy(command, part1); /* copy name into the new var */
+    strcat(command, secret); /* add the extension */
+    strcat(command, part2); /* add the extension */
+
+    char buffer[100];
+    pubkey = run_command(buffer, command);
+  }
+
+  // Cleanup tmp dirs
+  remove_directory("/tmp/fastd_mesh_vpn_peers/");
+  remove_directory("/etc/fastd_mesh_vpn_peers/");
+  mkdir("/tmp/fastd_mesh_vpn_peers", 0700);
+  mkdir("/etc/fastd/mesh_vpn/peers", 0700);
+
+  /*
+   * -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\""
+   */
+  // TODO GET MAC
+  const char *mac = "";
+  // TODO GET hostname
+  const char *hostname = "";
+  const char *port = "";
+  // TODO GET lat
+  const char *lat = "";
+  // TODO GET long
+  const char *longitude = "";
+
+  const char *keyserver_url_part1 = "http://keyserver.ffslfl.net/index.php?mac=";
+  const char *keyserver_url_part2 = "&name=";
+  const char *keyserver_url_part3 = "&port=";
+  const char *keyserver_url_part4 = "&key=";
+  const char *keyserver_url_part5 = "&lat=";
+  const char *keyserver_url_part6 = "&long=";
+  char *url;
+  url = malloc(
+      strlen(keyserver_url_part1) + 1 + strlen(mac) + 1 +
+      strlen(keyserver_url_part2) + 1 +
+      strlen(hostname) + 1 +
+      strlen(keyserver_url_part3) + 1 +
+      strlen(port) + 1 +
+      strlen(keyserver_url_part4) + 1 +
+      strlen(pubkey) + 1 +
+      strlen(keyserver_url_part5) + 1 +
+      strlen(lat) + 1 +
+      strlen(keyserver_url_part6) + 1 +
+      strlen(longitude));
+  strcpy(url, keyserver_url_part1);
+  strcat(url, mac);
+  strcat(url, keyserver_url_part2);
+  strcat(url, hostname);
+  strcat(url, keyserver_url_part3);
+  strcat(url, port);
+  strcat(url, keyserver_url_part4);
+  strcat(url, pubkey);
+  strcat(url, keyserver_url_part5);
+  strcat(url, lat);
+  strcat(url, keyserver_url_part6);
+  strcat(url, longitude);
+
+  struct recv_keyserver_ctx keyserver_ctx = {};
+  keyserver_ctx.ptr = keyserver_ctx.buf;
+  struct keyserver_config *k = &keyserver_ctx.k;
+
+  int err_code = get_url(url, recv_keyserver_cb, &keyserver_ctx, -1);
+  if (err_code != 0) {
+    fprintf(stderr, "vpn-select: warning: error downloading keyserver config: %s\n", uclient_get_errmsg(err_code));
+  }
+
+  // TODO get name and ip and write config file for tunneldigger
+
+  // TODO Check if tunneldigger is enabled
+
+  // TODO build fastd config
+
+  // TODO decide if fastd or tunneldigger gets enabled
 }
 
 void run() {
@@ -32,7 +178,31 @@ void run() {
    * Check if /tmp/fastd_mesh_vpn_peers already exists
    */
   if (xis_dir("/tmp/fastd_mesh_vpn_peers")) {
+    char sumold_buffer[100];
+    char sumnew_buffer[100];
+    char fastd_running_status_buffer[100];
+    char *sumold = run_command(sumold_buffer, "sha256sum /etc/config/tunneldigger");
+    make_config(ctx);
+    char *sumnew = run_command(sumnew_buffer, "sha256sum /etc/config/tunneldigger");
+    if (strncmp(sumold, sumnew, sizeof(sumold)) != 0) {
+      execl("/etc/init.d/tunneldigger", "restart", NULL);
+    }
+    execl("/etc/init.d/fastd", "reload", NULL);
 
+
+    char *fastd_running_status_raw = run_command(fastd_running_status_buffer, "netstat -tulpn | grep fastd");
+    char *fastd_running_status = deblank(fastd_running_status_raw);
+    if (xis_dir("/tmp/fastd_mesh_vpn_peers")) {
+      if (fastd_running_status == NULL && strncmp(fastd_running_status, "", sizeof(fastd_running_status)) == 0 &&
+          strncmp(fastd_running_status, "netstat: showing only processes with your user ID",
+                  sizeof(fastd_running_status)) == 0) {
+        execl("/etc/init.d/fastd", "start", NULL);
+      }
+    } else {
+      if (fastd_running_status != NULL) {
+        execl("/etc/init.d/fastd", "stop", NULL);
+      }
+    }
   } else {
     mkdir("/tmp/fastd_mesh_vpn_peers", 0700);
     const char *secret = get_fastd_secret(ctx);
