@@ -3,7 +3,7 @@
 #include <uci.h>
 #include <stdbool.h>
 #include <printf.h>
-#include <libgluonutil.h>
+//#include <libgluonutil.h>
 #include <stdio.h>
 #include <string.h>
 

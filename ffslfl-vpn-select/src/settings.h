@@ -1,5 +1,7 @@
 #pragma once
 
+#include <uci.h>
+
 static const char *get_fastd_secret(struct uci_context *ctx);
 
 void set_fastd_secret(struct uci_context *ctx, const char *secret);

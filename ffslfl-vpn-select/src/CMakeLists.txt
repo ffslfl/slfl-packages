@@ -23,4 +23,4 @@ target_link_libraries(vpn_select
         ${UCLIENT_LIBRARY}
         )
 
-install(TARGETS vpn_select RUNTIME DESTINATION usr/sbin)
+install(TARGETS vpn_select RUNTIME DESTINATION sbin)
