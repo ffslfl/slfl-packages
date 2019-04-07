@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <regex.h>
 
 #include "util.h"
 #include "settings.h"
@@ -14,9 +15,13 @@
 
 #define MAX_LINE_LENGTH 512
 #define STRINGIFY(str) #str
+#define GWNAME_REGEX "(####)([a-zA-Z0-9.]+)"
+#define GWPORT_REGEX "ipv(4|6) \"([0-9.]+)\""
+#define FASTDCONFIG_REGEX ".conf #(.*) ###"
 
 struct keyserver_config {
     char *gw_name;
+    char *fastd_config;
     int port;
 };
 
@@ -37,11 +42,143 @@ void moveToCorrectProcess() {
     setpgid(0, grp->gr_gid);
 }
 
+char *getFastDConfig(char *line) {
+    size_t maxMatches = 2;
+    size_t maxGroups = 2;
+
+    regex_t regexCompiled;
+    regmatch_t groupArray[maxGroups];
+
+    unsigned int m;
+    char *cursor;
+
+    if (regcomp(&regexCompiled, FASTDCONFIG_REGEX, REG_EXTENDED)) {
+        printf("Could not compile regular expression.\n");
+        return NULL;
+    }
+
+    m = 0;
+    cursor = line;
+    char *result;
+    for (m = 0; m < maxMatches; m++) {
+        if (regexec(&regexCompiled, cursor, maxGroups, groupArray, 0))
+            break;  // No more matches
+
+        unsigned int g = 0;
+        unsigned int offset = 0;
+        for (g = 0; g < maxGroups; g++) {
+            if (groupArray[g].rm_so == (size_t) -1)
+                break;  // No more groups
+
+            if (g == 0)
+                offset = groupArray[g].rm_eo;
+
+            char cursorCopy[strlen(cursor) + 1];
+            strcpy(cursorCopy, cursor);
+            cursorCopy[groupArray[g].rm_eo] = 0;
+
+            result = cursorCopy + groupArray[g].rm_so;
+        }
+        cursor += offset;
+    }
+
+    regfree(&regexCompiled);
+    return result;
+}
+
+char *getPort(char *line) {
+    size_t maxMatches = 2;
+    size_t maxGroups = 2;
+
+    regex_t regexCompiled;
+    regmatch_t groupArray[maxGroups];
+
+    unsigned int m;
+    char *cursor;
+
+    if (regcomp(&regexCompiled, GWPORT_REGEX, REG_EXTENDED)) {
+        printf("Could not compile regular expression.\n");
+        return NULL;
+    }
+
+    m = 0;
+    cursor = line;
+    char *result;
+    for (m = 0; m < maxMatches; m++) {
+        if (regexec(&regexCompiled, cursor, maxGroups, groupArray, 0))
+            break;  // No more matches
+
+        unsigned int g = 0;
+        unsigned int offset = 0;
+        for (g = 0; g < maxGroups; g++) {
+            if (groupArray[g].rm_so == (size_t) -1)
+                break;  // No more groups
+
+            if (g == 0)
+                offset = groupArray[g].rm_eo;
+
+            char cursorCopy[strlen(cursor) + 1];
+            strcpy(cursorCopy, cursor);
+            cursorCopy[groupArray[g].rm_eo] = 0;
+
+            result = cursorCopy + groupArray[g].rm_so;
+        }
+        cursor += offset;
+    }
+
+    regfree(&regexCompiled);
+    return result;
+}
+
+char *getGWName(char *line) {
+    size_t maxMatches = 2;
+    size_t maxGroups = 2;
+
+    regex_t regexCompiled;
+    regmatch_t groupArray[maxGroups];
+
+    unsigned int m;
+    char *cursor;
+
+    if (regcomp(&regexCompiled, GWNAME_REGEX, REG_EXTENDED)) {
+        printf("Could not compile regular expression.\n");
+        return NULL;
+    }
+
+    m = 0;
+    cursor = line;
+    char *result;
+    for (m = 0; m < maxMatches; m++) {
+        if (regexec(&regexCompiled, cursor, maxGroups, groupArray, 0))
+            break;  // No more matches
+
+        unsigned int g = 0;
+        unsigned int offset = 0;
+        for (g = 0; g < maxGroups; g++) {
+            if (groupArray[g].rm_so == (size_t) -1)
+                break;  // No more groups
+
+            if (g == 0)
+                offset = groupArray[g].rm_eo;
+
+            char cursorCopy[strlen(cursor) + 1];
+            strcpy(cursorCopy, cursor);
+            cursorCopy[groupArray[g].rm_eo] = 0;
+
+            result = cursorCopy + groupArray[g].rm_so;
+        }
+        cursor += offset;
+    }
+
+    regfree(&regexCompiled);
+    return result;
+}
+
 void parse_line(char *line, struct keyserver_config *k) {
-    /* TODO parse line to struct via regexp
-     * Name Regex:   (####)([a-zA-Z0-9.]+)
-     * PORT Regex:   ipv(4|6) "([0-9.]+)"
-     */
+    k->gw_name = getGWName(line);
+    char *portS = getPort(line);
+    k->port = strtol(portS, &portS, 10);
+    k->fastd_config = getFastDConfig(line);
 }
 
 /** Receives data from uclient, chops it to lines and hands it to \ref parse_line */
