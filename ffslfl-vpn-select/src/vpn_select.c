@@ -84,7 +84,7 @@ static void recv_keyserver_cb(struct uclient *cl) {
 
 void make_config(struct uci_context *ctx) {
     const char *pubkey = get_fastd_pubkey(ctx);
-    if (strncmp(pubkey, "", sizeof(pubkey)) == 0) {
+    if (strcmp(pubkey, "") == 0) {
         const char *secret = get_fastd_secret(ctx);
         const char *part1 = "uci set fastd.mesh_vpn.pubkey=$(echo \"secret \\\\\"";
         const char *part2 = "\\\\\";\" | fastd -c - --show-key --machine-readable) && uci commit fastd && uci get fastd.mesh_vpn.pubkey";
@@ -159,7 +159,7 @@ void run() {
         char *sumold = run_command(sumold_buffer, "sha256sum /etc/config/tunneldigger");
         make_config(ctx);
         char *sumnew = run_command(sumnew_buffer, "sha256sum /etc/config/tunneldigger");
-        if (strncmp(sumold, sumnew, sizeof(sumold)) != 0) {
+        if (strcmp(sumold, sumnew) != 0) {
             execl("/etc/init.d/tunneldigger", "restart", NULL);
         }
         execl("/etc/init.d/fastd", "reload", NULL);
@@ -168,9 +168,7 @@ void run() {
         char *fastd_running_status_raw = run_command(fastd_running_status_buffer, "netstat -tulpn | grep fastd");
         char *fastd_running_status = deblank(fastd_running_status_raw);
         if (xis_dir("/tmp/fastd_mesh_vpn_peers")) {
-            if (fastd_running_status == NULL && strncmp(fastd_running_status, "", sizeof(fastd_running_status)) == 0 &&
-                strncmp(fastd_running_status, "netstat: showing only processes with your user ID",
-                        sizeof(fastd_running_status)) == 0) {
+            if (fastd_running_status == NULL) {
                 execl("/etc/init.d/fastd", "start", NULL);
             }
         } else {
@@ -185,11 +183,11 @@ void run() {
             char buffer[100];
             char *secret_raw = run_command(buffer, "fastd --generate-key 2>&1 |  awk '/[Ss]ecret/ { print $2 }'");
             char *secret = deblank(secret_raw);
-            set_fastd_secret(&ctx, secret);
+            set_fastd_secret(ctx, secret);
             struct uci_package *p;
-            uci_commit(&ctx, &p, false);
+            uci_commit(ctx, &p, false);
         }
-        make_config();
+        make_config(ctx);
         execl("/etc/init.d/fastd", "start", NULL);
         execl("/etc/init.d/tunneldigger", "start", NULL);
     }
