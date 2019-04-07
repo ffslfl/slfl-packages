@@ -231,8 +231,11 @@ char *getGWName(char *line) {
 }
 
 void parse_gw_enabled_line(char *line, struct gw_enabled_config *k) {
-    int enabledI = strtol(line, &line, 10);
-    k->enabled = (bool) enabledI;
+    if (strcmp(line, "l2tp") == 0) {
+        k->enabled = true;
+    } else {
+        k->enabled = false;
+    }
 }
 
 /** Receives data from uclient, chops it to lines and hands it to \ref parse_line */
