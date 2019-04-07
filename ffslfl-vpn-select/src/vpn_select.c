@@ -82,6 +82,21 @@ static void recv_keyserver_cb(struct uclient *cl) {
     }
 }
 
+char *get_content(char *filepath) {
+    FILE *f = fopen(filepath, "rb");
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    fseek(f, 0, SEEK_SET);  /* same as rewind(f); */
+
+    char *string = malloc(fsize + 1);
+    fread(string, 1, fsize, f);
+    fclose(f);
+
+    string[fsize] = 0;
+
+    return string;
+}
+
 void make_config(struct uci_context *ctx) {
     const char *pubkey = get_fastd_pubkey(ctx);
     if (strcmp(pubkey, "") == 0) {
@@ -107,18 +122,11 @@ void make_config(struct uci_context *ctx) {
     mkdir("/tmp/fastd_mesh_vpn_peers", 0700);
     mkdir("/etc/fastd/mesh_vpn/peers", 0700);
 
-    /*
-     * -O /tmp/fastd_mesh_vpn_output && echo \"$(awk '/^####/ { gsub(/^####/, \"\", $0); gsub(/.conf/, \"\", $0); print $0; }' /tmp/fastd_mesh_vpn_output)\""
-     */
-    // TODO GET MAC
-    const char *mac = "";
-    // TODO GET hostname
-    const char *hostname = "";
+    const char *mac = get_content("/sys/class/net/br-wan/address");
+    const char *hostname = get_content("/proc/sys/kernel/hostname");
     const char *port = "";
-    // TODO GET lat
-    const char *lat = "";
-    // TODO GET long
-    const char *longitude = "";
+    const char *lat = get_latitude(ctx);
+    const char *longitude = get_longitude(ctx);
 
     size_t needed =
             snprintf(NULL, 0, "http://keyserver.ffslfl.net/index.php?mac=%s&name=%s&port=%s&key=%s&lat=%s&long=%s", mac,

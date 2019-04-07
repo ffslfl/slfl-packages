@@ -12,3 +12,7 @@ const char *
 get_first_option(struct uci_context *ctx, struct uci_package *p, const char *type, const char *option);
 
 struct uci_section *get_first_section(struct uci_package *p, const char *type);
+
+const char *get_latitude(struct uci_context *ctx);
+
+const char *get_longitude(struct uci_context *ctx);
