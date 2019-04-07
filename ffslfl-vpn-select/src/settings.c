@@ -17,12 +17,33 @@ const char *get_fastd_secret(struct uci_context *ctx) {
     return NULL;
 }
 
+const char *get_tunneldigger_enabled(struct uci_context *ctx) {
+    struct uci_package *p;
+    if (!uci_load(ctx, "tunneldigger", &p)) {
+        const char *secret = get_first_option(ctx, p, ".", "enabled");
+        if (!secret || !*secret)
+            return NULL;
+
+        return secret;
+    }
+    return NULL;
+}
+
 void set_fastd_secret(struct uci_context *ctx, const char *secret) {
     struct uci_ptr uci_ptr;
     memset(&uci_ptr, 0, sizeof(uci_ptr));
 
     uci_ptr.package = "fastd";
     uci_ptr.value = secret;
+    uci_set(ctx, &uci_ptr);
+}
+
+void set_fastd_status(struct uci_context *ctx, char *status) {
+    struct uci_ptr uci_ptr;
+    memset(&uci_ptr, 0, sizeof(uci_ptr));
+
+    uci_ptr.package = "fastd.mesh_vpn.enabled";
+    uci_ptr.value = status;
     uci_set(ctx, &uci_ptr);
 }
 
@@ -36,6 +57,13 @@ const char *get_fastd_pubkey(struct uci_context *ctx) {
         return pubkey;
     }
     return NULL;
+}
+
+void commit_tunneldigger(struct uci_context *ctx) {
+    struct uci_package *p;
+    if (!uci_load(ctx, "tunneldigger", &p)) {
+        uci_commit(ctx, p, false);
+    }
 }
 
 const char *
@@ -88,7 +116,7 @@ static struct uci_package *find_package(struct uci_context *ctx, const char *str
     if (al)
         uci_load(ctx, name, &p);
 
-done:
+    done:
     if (name != str)
         free(name);
     return p;
@@ -126,7 +154,7 @@ static const char *get_first(struct uci_context *ctx, const char *conf, const ch
     }
 
     return value;
-done:
+    done:
     return NULL;
 }
 
