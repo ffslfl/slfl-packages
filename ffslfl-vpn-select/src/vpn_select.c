@@ -16,7 +16,7 @@
 #define MAX_LINE_LENGTH 512
 #define STRINGIFY(str) #str
 #define GWNAME_REGEX "(####)([a-zA-Z0-9.]+)"
-#define GWIP_REGEX "ipv(4|6) \"([0-9.]+)\""
+#define GWIP_REGEX "remote (ipv(4|6) )?\"([A-Za-z0-9.]+)\""
 #define GWPORT_REGEX "port ([0-9]+)"
 #define FASTDCONFIG_REGEX ".conf #(.*) ###"
 
