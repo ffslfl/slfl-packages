@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="35772033-b013-4653-9311-1d2809866a2a" name="Default" comment="Update translations for ingress and egress">
+    <list default="true" id="35772033-b013-4653-9311-1d2809866a2a" name="Default" comment="Fix reboot page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/reboot/0100-mesh-vpn.lua" beforeDir="false" afterPath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/reboot/0100-mesh-vpn.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/wizard/0300-mesh-vpn.lua" beforeDir="false" afterPath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/wizard/0300-mesh-vpn.lua" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,7 +11,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="4739" />
+    <option name="totalTimeSeconds" value="4964" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
@@ -128,7 +128,7 @@
       <workItem from="1495432118219" duration="202000" />
       <workItem from="1495437207590" duration="3394000" />
       <workItem from="1575742731729" duration="188000" />
-      <workItem from="1575742940806" duration="9320000" />
+      <workItem from="1575742940806" duration="9927000" />
     </task>
     <task id="LOCAL-00001" summary="Prepare lua Version">
       <created>1495441045515</created>
@@ -186,7 +186,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575814926208</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Fix reboot page">
+      <created>1575815310360</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1575815310360</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView">
@@ -209,17 +216,18 @@
     <MESSAGE value="Fix import" />
     <MESSAGE value="Use full name" />
     <MESSAGE value="Update translations for ingress and egress" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update translations for ingress and egress" />
+    <MESSAGE value="Fix reboot page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix reboot page" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="198" key="#Other_File_Types" timestamp="1575742906769">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="552" y="198" key="#Other_File_Types/0.0.1920.1080@0.0.1920.1080" timestamp="1575742906769" />
-    <state x="590" y="48" key="CommitChangelistDialog2" timestamp="1575814925611">
+    <state x="590" y="48" key="CommitChangelistDialog2" timestamp="1575815997050">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="590" y="48" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575814925611" />
+    <state x="590" y="48" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575815997050" />
     <state x="664" y="246" key="MultipleFileMergeDialog" timestamp="1575797965097">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>

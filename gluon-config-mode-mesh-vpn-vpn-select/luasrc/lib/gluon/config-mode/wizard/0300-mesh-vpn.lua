@@ -56,29 +56,33 @@ return function(form, uci)
 	end
 
 	local limit = s:option(Flag, "limit_enabled", pkg_i18n.translate("Limit bandwidth"))
-	limit:depends(meshvpn_activated, true)
-	limit.default = uci:get_bool("simple-tc", "mesh_vpn", "enabled")
-	function limit:write(data)
-		uci:set("simple-tc", "mesh_vpn", "interface")
-		uci:set("simple-tc", "mesh_vpn", "enabled", data)
-		uci:set("simple-tc", "mesh_vpn", "ifname", "mesh-vpn")
-	end
+    limit:depends(meshvpn_activated, true)
+    limit.default = uci:get_bool("gluon", "mesh_vpn", "limit_enabled")
+    function limit:write(data)
+        uci:set("gluon", "mesh_vpn", "limit_enabled", data)
+    end
 
-	o = s:option(Value, "limit_ingress", pkg_i18n.translate("Downstream (Mbit/s)"))
-	o:depends(limit, true)
+    local function div(n, d)
+        if n then
+            return n / d
+        end
+    end
+
+    o = s:option(Value, "limit_ingress", pkg_i18n.translate("Downstream (Mbit/s)"))
+    o:depends(limit, true)
     o.default = div(uci:get("gluon", "mesh_vpn", "limit_ingress"), 1000)
     o.datatype = "ufloat"
-	function o:write(data)
-		uci:set("gluon", "mesh_vpn", "limit_ingress", data * 1000)
-	end
+    function o:write(data)
+        uci:set("gluon", "mesh_vpn", "limit_ingress", data * 1000)
+    end
 
-	o = s:option(Value, "limit_egress", pkg_i18n.translate("Upstream (Mbit/s)"))
-	o:depends(limit, true)
+    o = s:option(Value, "limit_egress", pkg_i18n.translate("Upstream (Mbit/s)"))
+    o:depends(limit, true)
     o.default = div(uci:get("gluon", "mesh_vpn", "limit_egress"), 1000)
     o.datatype = "ufloat"
-	function o:write(data)
-		uci:set("gluon", "mesh_vpn", "limit_egress", data * 1000)
-	end
+    function o:write(data)
+        uci:set("gluon", "mesh_vpn", "limit_egress", data * 1000)
+    end
 
 	return {'fastd', 'tunneldigger', 'simple-tc'}
 end
