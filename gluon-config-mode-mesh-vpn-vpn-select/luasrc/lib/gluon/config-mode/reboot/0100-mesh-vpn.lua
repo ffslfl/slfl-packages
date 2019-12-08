@@ -16,7 +16,7 @@ local contact = uci:get_first("gluon-node-info", "owner", "contact")
 local pubkey
 local msg
 
-local tunneldigger_enabled = uci:get_bool("tunneldigger", "mesh_vpn", "enabled")
+local tunneldigger_enabled = uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get("tunneldigger", "mesh_vpn", "enabled") == "1"
 if not tunneldigger_enabled then
     msg = site_i18n._translate('gluon-config-mode:novpn')
 end
