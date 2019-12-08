@@ -1,11 +1,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=gluon-config-mode-mesh-vpn-vpn-select
-PKG_VERSION:=2
+PKG_VERSION:=3
 
 PKG_BUILD_DIR := $(BUILD_DIR)/$(PKG_NAME)
 
-include $(TOPDIR)/../package/gluon.mk
+include $(TOPDIR)/../gluon.mk
 
 PKG_CONFIG_DEPENDS += $(GLUON_I18N_CONFIG)
 
@@ -14,7 +14,7 @@ define Package/gluon-config-mode-mesh-vpn-vpn-select
   SECTION:=gluon
   CATEGORY:=Gluon
   TITLE:=Toggle mesh-vpn and bandwidth limit
-  DEPENDS:=gluon-config-mode-core-virtual +gluon-mesh-vpn-core
+  DEPENDS:=+gluon-config-mode-core +gluon-mesh-vpn-core
 endef
 
 define Build/Prepare
@@ -34,4 +34,4 @@ define Package/gluon-config-mode-mesh-vpn-vpn-select/install
 	$(call GluonInstallI18N,gluon-config-mode-mesh-vpn-vpn-select,$(1))
 endef
 
-$(eval $(call BuildPackage,gluon-config-mode-mesh-vpn-vpn-select))
+$(eval $(call BuildPackageGluon,gluon-config-mode-mesh-vpn-vpn-select))
