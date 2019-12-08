@@ -24,7 +24,7 @@ return function(form, uci)
 	meshvpn:value("fastd", pkg_i18n.translate("Fastd (slower but encrypted)"))
 	meshvpn:value("disabled", pkg_i18n.translate("Disable"))
 	
-	if uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get_bool("tunneldigger", "mesh_vpn", "enabled") == "1" then
+	if uci:get_bool("tunneldigger", "mesh_vpn", "enabled") or uci:get("tunneldigger", "mesh_vpn", "enabled") == "1" then
 		meshvpn.default = "tunneldigger"
 	else
 		meshvpn.default = "fastd"
