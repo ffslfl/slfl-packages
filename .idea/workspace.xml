@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="35772033-b013-4653-9311-1d2809866a2a" name="Default" comment="Versuch config mode zu reparieren">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/reboot/0100-mesh-vpn.lua" beforeDir="false" afterPath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/reboot/0100-mesh-vpn.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/wizard/0300-mesh-vpn.lua" beforeDir="false" afterPath="$PROJECT_DIR$/gluon-config-mode-mesh-vpn-vpn-select/luasrc/lib/gluon/config-mode/wizard/0300-mesh-vpn.lua" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,7 +12,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="DarkyenusTimeTracker">
-    <option name="totalTimeSeconds" value="1990" />
+    <option name="totalTimeSeconds" value="2584" />
     <option name="gitIntegration" value="true" />
     <option name="naggedAbout" value="1" />
   </component>
@@ -134,7 +135,7 @@
       <workItem from="1495432118219" duration="202000" />
       <workItem from="1495437207590" duration="3394000" />
       <workItem from="1575742731729" duration="188000" />
-      <workItem from="1575742940806" duration="3461000" />
+      <workItem from="1575742940806" duration="4877000" />
     </task>
     <task id="LOCAL-00001" summary="Prepare lua Version">
       <created>1495441045515</created>
@@ -150,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1575795558372</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Versuch config mode zu reparieren">
+      <created>1575798658118</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1575798658118</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -175,10 +183,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="552" y="198" key="#Other_File_Types/0.0.1920.1080@0.0.1920.1080" timestamp="1575742906769" />
-    <state x="590" y="48" key="CommitChangelistDialog2" timestamp="1575797971321">
+    <state x="590" y="48" key="CommitChangelistDialog2" timestamp="1575798657569">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="590" y="48" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575797971321" />
+    <state x="590" y="48" key="CommitChangelistDialog2/0.0.1920.1080@0.0.1920.1080" timestamp="1575798657569" />
     <state x="664" y="246" key="MultipleFileMergeDialog" timestamp="1575797965097">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
@@ -187,10 +195,10 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="461" y="182" key="SettingsEditor/0.0.1920.1080@0.0.1920.1080" timestamp="1575742919512" />
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1575795559511">
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2" timestamp="1575798660479">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
-    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1575795559511" />
+    <state x="552" y="268" key="Vcs.Push.Dialog.v2/0.0.1920.1080@0.0.1920.1080" timestamp="1575798660479" />
     <state x="636" y="363" key="com.intellij.ide.util.TipDialog" timestamp="1575742947651">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
