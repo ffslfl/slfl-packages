@@ -1,11 +1,22 @@
 #!/usr/bin/lua
 
-local site = require 'gluon.site_config'
 local util = require 'gluon.util'
 local posix = require 'posix'
+local grp = require 'posix.grp'
+local unistd = require 'posix.unistd'
 local uci = require('simple-uci').cursor()
 
-posix.setgid("gluon-mesh-vpn")
+local g = grp.getgrnam("gluon-mesh-vpn")
+if not g then
+	io.stderr:write(string.format("vpn-select: unable to find group '%s'\n", "gluon-mesh-vpn"))
+	os.exit(1)
+end
+
+local ok, err = unistd.setpid('g', g.gr_gid)
+if ok ~= 0 then
+	io.stderr:write(string.format("vpn-select: unable to change to group: %s\n", err))
+	os.exit(1)
+end
 
 --- Check if a file or directory exists in this path
 function exists(file)
