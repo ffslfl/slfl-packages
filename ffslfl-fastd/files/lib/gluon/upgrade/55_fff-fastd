@@ -10,6 +10,7 @@ uci batch <<EOF
   set fastd.mesh_vpn.method='salsa2012+umac'
   set fastd.mesh_vpn.mode='tap'
   set fastd.mesh_vpn.interface="mesh-vpn"
+  set fastd.mesh_vpn.group='gluon-mesh-vpn'
   set fastd.mesh_vpn.mtu='1280'
   set fastd.mesh_vpn.secure_handshakes='0'
   set fastd.mesh_vpn.secret="generate"
