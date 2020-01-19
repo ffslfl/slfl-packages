@@ -11,7 +11,7 @@ define Package/$(PKG_NAME)
     CATEGORY:=Freifunk
     TITLE:= Freifunk-Schleswig-Flensburg tunneldigger
     URL:=http://ffslfl.net
-    DEPENDS:=+tunneldigger
+    DEPENDS:=+tunneldigger +@GLUON_SPECIALIZE_KERNEL:KERNEL_L2TP
 endef
 
 define Package/$(PKG_NAME)/description
