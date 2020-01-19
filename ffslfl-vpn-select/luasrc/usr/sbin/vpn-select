@@ -50,6 +50,7 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
     path = '/lib/gluon/vpn-select/iptables.rules',
     family = 'ipv4',
 })
+uci:save('firewall')
 
 local mac_raw = util.trim(util.readfile('/sys/class/net/br-wan/address'))
 local mac = string.upper(string.gsub(mac_raw, ":", ""))
