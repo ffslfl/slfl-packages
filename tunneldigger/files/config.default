@@ -3,6 +3,8 @@ config broker
 	list address 'x.y.z.w:53'
 	list address 'x.y.z.w:123'
 	option uuid 'abcd'
+	option group 'root'
 	option interface 'mesh-vpn'
 	option limit_bw_down '1024'
+	option broker_selection 'usage'
 	option enabled '0'
