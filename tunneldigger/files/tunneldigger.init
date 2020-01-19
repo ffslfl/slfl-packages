@@ -20,10 +20,12 @@ config_cb() {
 			config_get addresses "$cfg" address
 			config_get uuid "$cfg" uuid
 			config_get interface "$cfg" interface
+			config_get group "$cfg" group
 			config_get limit_bw_down "$cfg" limit_bw_down
 			config_get hook_script "$cfg" hook_script
 			config_get bind_interface "$cfg" bind_interface
-
+			config_get broker_selection "$cfg" broker_selection
+			
 			[ $enabled -eq 0 ] && return
 
 			local broker_opts=""
@@ -39,6 +41,20 @@ config_cb() {
 				network_get_device _bind_interface "${bind_interface}" || _bind_interface="${bind_interface}"
 				append broker_opts "-I ${_bind_interface}"
 			}
+			[ ! -z "${broker_selection}" ] && {
+				# Set broker selection.
+				case "${broker_selection}" in
+					usage)
+						append broker_opts "-a"
+					;;
+					first)
+						append broker_opts "-g"
+					;;
+					random)
+						append broker_opts "-r"
+					;;
+				esac
+			}
 
 			if [ -z "$uuid" ]; then
 				missing uuid
@@ -49,7 +65,7 @@ config_cb() {
 			fi
 
 			echo "Starting tunneldigger on ${interface}"
-			/sbin/start-stop-daemon -S -q -b -m -p ${PIDPATH}/tunneldigger.${interface}.pid -x /usr/bin/tunneldigger -- -u ${uuid} -i ${interface} -t ${tunnel_id} ${broker_opts}
+			/sbin/start-stop-daemon -S -q -b -m -c root:${group} -p ${PIDPATH}/tunneldigger.${interface}.pid -x /usr/bin/tunneldigger -- -u ${uuid} -i ${interface} -t ${tunnel_id} ${broker_opts}
 
 			let tunnel_id++
 		;;
@@ -65,7 +81,7 @@ stop() {
 		PID="$(cat ${PIDFILE})"
 		IFACE="$(echo ${PIDFILE} | awk -F\/tunneldigger '{print $2}' | cut -d'.' -f2)"
 		echo "Stopping tunneldigger for interface ${IFACE}"
-		start-stop-daemon -K -q -p $PIDFILE
+		start-stop-daemon -K -q -p $PIDFILE 
 		while test -d "/proc/${PID}"; do
 			echo "  waiting for tunneldigger to stop"
 			sleep 1
