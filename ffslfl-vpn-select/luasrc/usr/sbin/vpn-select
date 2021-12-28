@@ -100,6 +100,7 @@ function make_config()
     end
 
     local enabled = uci:get('tunneldigger', 'broker', 'mesh_vpn', 'enabled')
+    local enabled_new = simpleUci:get('tunneldigger', 'mesh_vpn', 'enabled')
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
     
@@ -114,7 +115,7 @@ function make_config()
     
     local l2port = fdport + 10000
 
-    if (enabledGW ~= "0" and enabled ~= "0" and enabled ~= nil) then
+    if (enabledGW ~= "0" and ((enabled ~= "0" and enabled ~= nil) or (enabled_new ~= "0" and enabled_new ~= nil))) then
         uci:set("fastd", "mesh_vpn", "enabled", "0")
         -- Delete old broker config section
         if not uci:get('tunneldigger', 'mesh_vpn') then
