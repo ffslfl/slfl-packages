@@ -1,6 +1,5 @@
 local uci = require('simple-uci').cursor()
 
-local site = require 'gluon.site'
 local util = require 'gluon.util'
 local vpn_core = require 'gluon.mesh-vpn'
 
@@ -16,7 +15,7 @@ function M.enable(val)
 end
 
 function M.active()
-	return site.mesh_vpn.fastd() ~= nil
+	return uci:get('fastd', 'mesh_vpn', 'enabled') ~= "0" and uci:get('tunneldigger', 'mesh_vpn', 'enabled') ~= nil
 end
 
 function M.set_limit(ingress_limit, egress_limit)
