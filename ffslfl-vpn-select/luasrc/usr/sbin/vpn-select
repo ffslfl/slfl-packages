@@ -100,7 +100,7 @@ function make_config()
     end
 
     local enabled = uci:get('tunneldigger', 'broker', 'mesh_vpn', 'enabled')
-    local enabled_new = simpleUci:get('tunneldigger', 'mesh_vpn', 'enabled')
+    local enabled_new = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
     
