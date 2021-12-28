@@ -15,8 +15,8 @@ end
 
 function M.active()
 	local enabled = uci:get('tunneldigger', 'broker', 'mesh_vpn', 'enabled')
-        local enabled_new = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
-	return (enabled ~= "0" and enabled ~= nil) or (enabled_new ~= "0" and enabled_new ~= nil))
+	local enabled_new = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
+	return (enabled ~= "0" and enabled ~= nil) or (enabled_new ~= "0" and enabled_new ~= nil)
 end
 
 function M.set_limit(ingress_limit, egress_limit)
