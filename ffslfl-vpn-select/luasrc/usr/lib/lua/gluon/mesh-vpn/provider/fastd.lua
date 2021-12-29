@@ -15,7 +15,7 @@ function M.enable(val)
 end
 
 function M.active()
-	return uci:get('fastd', 'mesh_vpn', 'enabled') ~= "0" and uci:get('tunneldigger', 'mesh_vpn', 'enabled') ~= nil
+	return uci:get('fastd', 'mesh_vpn', 'enabled') ~= "0" and uci:get('fastd', 'mesh_vpn', 'enabled') ~= nil
 end
 
 function M.set_limit(ingress_limit, egress_limit)
