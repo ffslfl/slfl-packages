@@ -1,10 +1,6 @@
-/etc/init.d/fastd disable
-
->/etc/config/fastd
-
+#  set fastd.mesh_vpn.enabled='1'
 uci batch <<EOF
   set fastd.mesh_vpn=fastd
-  set fastd.mesh_vpn.enabled='1'
   set fastd.mesh_vpn.config_peer_dir="/etc/fastd/mesh_vpn/peers"
   set fastd.mesh_vpn.syslog_level='warn'
   set fastd.mesh_vpn.method='salsa2012+umac'

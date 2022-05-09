@@ -36,6 +36,7 @@ return function(form, uci)
 			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "0",
                         })
+                        uci:set("gluon", "mesh_vpn", "enabled", "1")
 			meshvpn_activated = true
 		end
 		if data == "tunneldigger" then
@@ -43,6 +44,7 @@ return function(form, uci)
 			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "1",
                         })
+                        uci:set("gluon", "mesh_vpn", "enabled", "1")
 			meshvpn_activated = true
 		end
 		if data == "disabled" then
