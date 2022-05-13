@@ -1,4 +1,5 @@
 local simpleUci = require("simple-uci").cursor()
+local vpn = require 'gluon.mesh-vpn'
 
 return function(form, uci)
 
@@ -32,29 +33,40 @@ return function(form, uci)
 
 	function meshvpn:write(data)
 		if data == "fastd" then
-			uci:set("fastd", "mesh_vpn", "enabled", "1")
-			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
-                             enabled = "0",
-                        })
+			local fastd = vpn.get_provider("fastd")
+			local tunneldigger = vpn.get_provider("tunneldigger")
+			if fastd then
+				fastd:enable(true)
+			if tunneldigger then
+				tunneldigger:enable(false)
+				uci:delete_all('tunneldigger', 'broker')
 			uci:set("gluon", "mesh_vpn", "enabled", "1")
 			meshvpn_activated = true
 		end
 		if data == "tunneldigger" then
-			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
-                             enabled = "1",
-                        })
+			local fastd = vpn.get_provider("fastd")
+			local tunneldigger = vpn.get_provider("tunneldigger")
+			if fastd then
+				fastd:enable(false)
+			if tunneldigger then
+				tunneldigger:enable(true)
+				uci:delete_all('tunneldigger', 'broker')
 			meshvpn_activated = true
 			uci:set("gluon", "mesh_vpn", "enabled", "1")
 		end
 		if data == "disabled" then
-			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
-                             enabled = "0",
-                        })
+			local fastd = vpn.get_provider("fastd")
+			local tunneldigger = vpn.get_provider("tunneldigger")
+			if fastd then
+				fastd:enable(false)
+			if tunneldigger then
+				tunneldigger:enable(false)
+				uci:delete_all('tunneldigger', 'broker')
+			uci:set("gluon", "mesh_vpn", "enabled", "0")
 			meshvpn_activated = false
 		end
 		simpleUci:commit('tunneldigger')
+		uci:save('gluon')
 	end
 
 	local limit = s:option(Flag, "limit_enabled", pkg_i18n.translate("Limit bandwidth"))

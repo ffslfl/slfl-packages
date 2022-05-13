@@ -6,6 +6,8 @@ local grp = require 'posix.grp'
 local unistd = require 'posix.unistd'
 local uci = require('simple-uci').cursor()
 
+local vpn = require 'gluon.mesh-vpn'
+
 local g = grp.getgrnam("gluon-mesh-vpn")
 if not g then
 	io.stderr:write(string.format("vpn-select: unable to find group '%s'\n", "gluon-mesh-vpn"))
@@ -52,17 +54,21 @@ uci:section('firewall', 'include', 'mesh_vpn_dns', {
 })
 uci:save('firewall')
 
+
+local fastd = vpn.get_provider('fastd')
+local tunneldigger = vpn.get_provider('tunneldigger')
+
 local mac_raw = util.trim(util.readfile('/sys/class/net/br-wan/address'))
 local mac = string.upper(string.gsub(mac_raw, ":", ""))
 local hostname = util.trim(util.readfile('/proc/sys/kernel/hostname'))
 local port = ''
-local pubkey = uci:get("fastd", "mesh_vpn", "pubkey")
+local pubkey = fastd.public_key()
 local lat = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'latitude') or ""
 local long = uci:get('gluon-node-info', uci:get_first('gluon-node-info', 'location'), 'longitude') or ""
 
 function make_config()
     if (pubkey == nil or pubkey == "") then
-        local secret = uci:get("fastd", "mesh_vpn", "secret")
+        local secret = vpn.get_secret()
         pubkey_raw =  io.popen('uci set fastd.mesh_vpn.pubkey=$(echo "secret \\"' .. secret .. '\\";" | fastd -c - --show-key --machine-readable) && uci commit fastd && uci get fastd.mesh_vpn.pubkey'):read('*all')
         local pubkeyTable = split(pubkey_raw, "\n")
         if pubkeyTable[0] ~= nil then
@@ -99,8 +105,7 @@ function make_config()
         ip = ipTable[1]
     end
 
-    local enabled = uci:get('tunneldigger', 'broker', 'mesh_vpn', 'enabled')
-    local enabled_new = uci:get('tunneldigger', 'mesh_vpn', 'enabled')
+    local tunneldigger_enabled = tunneldigger.enabled()
 
     local enabledGW = io.popen('if [ "l2tp" = "$(wget -4 -T10 http://' .. ip .. '/vpn.txt -O - 2>/dev/null)" ]; then echo 1; else echo 0; fi', 'r'):read('*all')
     
@@ -115,14 +120,14 @@ function make_config()
     
     local l2port = fdport + 10000
 
-    if (enabledGW ~= "0" and ((enabled ~= "0" and enabled ~= nil) or (enabled_new ~= "0" and enabled_new ~= nil))) then
-        uci:set("fastd", "mesh_vpn", "enabled", "0")
+    if (enabledGW ~= "0" and tunneldigger_enabled) then
+        fastd.enable(false)
         -- Delete old broker config section
-        if not uci:get('tunneldigger', 'mesh_vpn') then
+        if uci:get('tunneldigger', 'broker', 'mesh_vpn') then
             uci:delete_all('tunneldigger', 'broker')
         end
 
-        uci:section('tunneldigger', 'broker', 'mesh_vpn', {
+        uci:section('tunneldigger', 'mesh_vpn', {
             enabled = enabled,
             uuid = util.node_id(),
             interface = 'mesh-vpn',
@@ -132,10 +137,17 @@ function make_config()
             address = "" .. ip .. ":" .. l2port .. "",
         })
 
-        uci:commit('tunneldigger')
+        uci:save('tunneldigger')
         os.remove("/etc/fastd/mesh_vpn/peers/")
+    elseif (fastd.enabled()) then
+        -- basically noop
+        fastd.enable(true)
     else
-        uci:set("fastd", "mesh_vpn", "enabled", "1")
+        -- only cleanup
+        if uci:get('tunneldigger', 'broker', 'mesh_vpn') then
+            uci:delete_all('tunneldigger', 'broker')
+        end
+        fastd.enable(false)
     end
 end
 
