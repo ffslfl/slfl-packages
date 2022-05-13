@@ -37,9 +37,11 @@ return function(form, uci)
 			local tunneldigger = vpn.get_provider("tunneldigger")
 			if fastd then
 				fastd:enable(true)
+			end
 			if tunneldigger then
 				tunneldigger:enable(false)
 				uci:delete_all('tunneldigger', 'broker')
+			end
 			uci:set("gluon", "mesh_vpn", "enabled", "1")
 			meshvpn_activated = true
 		end
@@ -48,9 +50,11 @@ return function(form, uci)
 			local tunneldigger = vpn.get_provider("tunneldigger")
 			if fastd then
 				fastd:enable(false)
+			end
 			if tunneldigger then
 				tunneldigger:enable(true)
 				uci:delete_all('tunneldigger', 'broker')
+			end
 			meshvpn_activated = true
 			uci:set("gluon", "mesh_vpn", "enabled", "1")
 		end
@@ -59,9 +63,11 @@ return function(form, uci)
 			local tunneldigger = vpn.get_provider("tunneldigger")
 			if fastd then
 				fastd:enable(false)
+			end
 			if tunneldigger then
 				tunneldigger:enable(false)
 				uci:delete_all('tunneldigger', 'broker')
+			end
 			uci:set("gluon", "mesh_vpn", "enabled", "0")
 			meshvpn_activated = false
 		end

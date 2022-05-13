@@ -22,13 +22,10 @@ if vpn.enabled() then
 		if provider.enabled() then
 			pubkey = active_vpn.public_key()
 			if pubkey ~= nil then
+				msg = site_i18n._translate('gluon-config-mode:pubkey')
 				break
 			end
 		end
-	end
-
-	if pubkey ~= nil then
-		msg = site_i18n._translate('gluon-config-mode:pubkey')
 	end
 else
 	msg = site_i18n._translate('gluon-config-mode:novpn')
