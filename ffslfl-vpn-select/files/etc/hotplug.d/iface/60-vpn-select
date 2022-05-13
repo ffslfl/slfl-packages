@@ -1,5 +1,5 @@
 #!/bin/sh
 [ "$ACTION" = ifup -a "$INTERFACE" = wan ] && {
-       sleep 3
+       sleep 30
        /usr/sbin/vpn-select
 }
