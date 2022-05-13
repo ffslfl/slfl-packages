@@ -118,7 +118,7 @@ function make_config()
     if (enabledGW ~= "0" and ((enabled ~= "0" and enabled ~= nil) or (enabled_new ~= "0" and enabled_new ~= nil))) then
         uci:set("fastd", "mesh_vpn", "enabled", "0")
         -- Delete old broker config section
-        if not uci:get('tunneldigger', 'mesh_vpn') then
+        if uci:get('tunneldigger', 'broker', 'mesh_vpn') then
             uci:delete_all('tunneldigger', 'broker')
         end
 
