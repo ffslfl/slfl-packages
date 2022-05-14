@@ -127,7 +127,7 @@ function make_config()
             uci:delete_all('tunneldigger', 'broker')
         end
 
-        uci:section('tunneldigger', 'mesh_vpn', {
+        uci:section('tunneldigger', 'broker', 'mesh_vpn', {
             enabled = enabled,
             uuid = util.node_id(),
             interface = 'mesh-vpn',
