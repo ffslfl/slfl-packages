@@ -141,12 +141,14 @@ function make_config()
         os.remove("/etc/fastd/mesh_vpn/peers/")
     elseif (fastd.enabled()) then
         -- basically noop
+        tunneldigger.enable(false)
         fastd.enable(true)
     else
         -- only cleanup
         if uci:get('tunneldigger', 'broker', 'mesh_vpn') then
             uci:delete_all('tunneldigger', 'broker')
         end
+        tunneldigger.enable(false)
         fastd.enable(false)
     end
 end
@@ -172,6 +174,7 @@ if isdir('/tmp/fastd_mesh_vpn_peers') then
     if isdir('/etc/fastd/mesh_vpn/peers/') then
         if (fastd_running_status == nil or fastd_running_status == "" or fastd_running_status == "netstat: showing only processes with your user ID") then
             io.popen('/etc/init.d/fastd start')
+            io.popen('/etc/init.d/tunneldigger stop')
         end
     else
         if fastd_running_status ~= nil then
