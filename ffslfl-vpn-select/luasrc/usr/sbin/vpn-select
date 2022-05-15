@@ -128,7 +128,7 @@ function make_config()
         end
 
         uci:section('tunneldigger', 'broker', 'mesh_vpn', {
-            enabled = enabled,
+            enabled = tunneldigger.enabled(),
             uuid = util.node_id(),
             interface = 'mesh-vpn',
             bind_interface = 'br-wan',
@@ -136,6 +136,7 @@ function make_config()
             broker_selection = 'usage',
             address = "" .. ip .. ":" .. l2port .. "",
         })
+        tunneldigger.enable(true)
 
         uci:save('tunneldigger')
         os.remove("/etc/fastd/mesh_vpn/peers/")
@@ -144,12 +145,8 @@ function make_config()
         tunneldigger.enable(false)
         fastd.enable(true)
     else
-        -- only cleanup
-        if uci:get('tunneldigger', 'broker', 'mesh_vpn') then
-            uci:delete_all('tunneldigger', 'broker')
-        end
-        tunneldigger.enable(false)
-        fastd.enable(false)
+        tunneldigger.enable(true)
+        fastd.enable(true)
     end
 end
 
