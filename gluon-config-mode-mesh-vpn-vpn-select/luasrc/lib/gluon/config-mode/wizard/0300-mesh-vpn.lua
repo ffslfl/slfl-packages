@@ -33,7 +33,7 @@ return function(form, uci)
 	function meshvpn:write(data)
 		if data == "fastd" then
 			uci:set("fastd", "mesh_vpn", "enabled", "1")
-			simpleUci:section('tunneldigger', 'mesh_vpn', {
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "0",
                         })
                         uci:set("gluon", "mesh_vpn", "enabled", "1")
@@ -41,7 +41,7 @@ return function(form, uci)
 		end
 		if data == "tunneldigger" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			simpleUci:section('tunneldigger', 'mesh_vpn', {
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "1",
                         })
                         uci:set("gluon", "mesh_vpn", "enabled", "1")
@@ -49,7 +49,7 @@ return function(form, uci)
 		end
 		if data == "disabled" then
 			uci:set("fastd", "mesh_vpn", "enabled", "0")
-			simpleUci:section('tunneldigger', 'mesh_vpn', {
+			simpleUci:section('tunneldigger', 'broker', 'mesh_vpn', {
                              enabled = "0",
                         })
 			meshvpn_activated = false
